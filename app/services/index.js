@@ -1,11 +1,15 @@
 import Signup from './registerService';
 import Signin from './loginService';
-import { profileUserPassword } from './user-services';
+import { profileUserPassword, getUsers, delUsers } from './user-services';
 
 const servicesExpress = {
   register: Signup,
   login: Signin,
-  profileUser: profileUserPassword,
+  userSevices: {
+    profileUserPassword,
+    getUsers,
+    delUsers,
+  },
 };
 
 export default servicesExpress;

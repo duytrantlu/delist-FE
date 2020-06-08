@@ -4,7 +4,7 @@ import Profile from 'containers/userProfile';
 import Register from 'containers/Register';
 import Login from 'containers/Login/Loadable';
 import Order from 'containers/Order';
-// import Tables from "views/examples/Tables.js";
+import userManager from 'containers/userManagement';
 // import Icons from "views/examples/Icons.js";
 
 const routes = [
@@ -27,6 +27,13 @@ const routes = [
     name: 'Orders',
     icon: 'ni ni-bullet-list-67 text-red',
     component: Order,
+    layout: '/admin',
+  },
+  {
+    path: '/user-manager',
+    name: 'User Manager',
+    icon: 'ni ni-bullet-list-67 text-red',
+    component: userManager,
     layout: '/admin',
   },
   {
