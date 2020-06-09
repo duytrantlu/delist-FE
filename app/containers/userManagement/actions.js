@@ -9,6 +9,8 @@ import {
   DEL_USER_SUCCEED,
   DEL_USER_FAILED,
   EDIT_USER_ACTION,
+  EDIT_USER_SUCCEED,
+  EDIT_USER_FAILED,
 } from './constants';
 
 export const getUsers = () => ({
@@ -51,7 +53,15 @@ export const adminDelUserFailed = () => ({
   type: DEL_USER_FAILED,
 });
 
-export const editRoleUser = newRole => ({
+export const editRoleUser = user => ({
   type: EDIT_USER_ACTION,
-  role: newRole,
+  data: user,
+});
+
+export const editRoleUserSucceed = () => ({
+  type: EDIT_USER_SUCCEED,
+});
+
+export const editRoleUserFailed = () => ({
+  type: EDIT_USER_FAILED,
 });

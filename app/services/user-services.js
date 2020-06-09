@@ -8,4 +8,6 @@ const getUsers = async () => Request.get(`${baseUrl}/api/users`);
 
 const delUsers = async ids => Request.delete(`${baseUrl}/api/users/ids/${ids}`);
 
-export { profileUserPassword, getUsers, delUsers };
+const editRole = async user => Request.put(`${baseUrl}/api/users/role`, user);
+
+export { profileUserPassword, getUsers, delUsers, editRole };

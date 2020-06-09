@@ -16,7 +16,8 @@ import Auth from 'utils/Auth';
 import {
   makeSelectUsers,
   makeSelectAddUserSucceed,
-  makeSelectDelUserSucceed
+  makeSelectDelUserSucceed,
+  makeSelectEditUserSucceed
 } from './selectors';
 import {
   getUsers as getUsersAction,
@@ -35,7 +36,8 @@ const userManager = props => {
     addUserSucceed,
     delUser,
     delUserSucceed,
-    editRole
+    editRole,
+    editRoleSucceed
   } = props;
   const user = Auth.getUser();
   const columns = React.useMemo(
@@ -59,17 +61,14 @@ const userManager = props => {
   }, [])
 
   useEffect(() => {
-    if (addUserSucceed || delUserSucceed) {
+    if (addUserSucceed || delUserSucceed || editRoleSucceed) {
       getData();
     }
-  }, [addUserSucceed, delUserSucceed]);
+  }, [addUserSucceed, delUserSucceed, editRoleSucceed]);
 
   const removeMyself = () => {
     return dataUser.filter(u => u.username != user.username);
   }
-
-  const pickUserToEditRole = (array, indexs) =>
-  array.filter((_, i) => indexs.includes(i))
 
   const dataWithoutMyself = removeMyself();
 
@@ -87,6 +86,8 @@ const userManager = props => {
     console.log("=rowIndex==", rowIndex)
     console.log("=columnId==", columnId)
     console.log("=value==", value)
+    console.log("==dataWithoutMyself=", dataWithoutMyself[rowIndex])
+    editRole({user:{...dataWithoutMyself[rowIndex], role: value}})
     // editRole({})
     // setData(old =>
     //   old.map((row, index) => {
@@ -123,6 +124,7 @@ const mapStateToProps = createStructuredSelector({
   dataUser: makeSelectUsers(),
   addUserSucceed: makeSelectAddUserSucceed(),
   delUserSucceed: makeSelectDelUserSucceed(),
+  editRoleSucceed: makeSelectEditUserSucceed(),
 });
 
 export const mapDispatchToProps = dispatch => ({

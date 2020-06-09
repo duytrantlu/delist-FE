@@ -16,6 +16,8 @@ import {
   adminAddUserSucceed,
   adminDelUserSucceed,
   adminDelUserFailed,
+  editRoleUserSucceed,
+  editRoleUserFailed
 } from './actions';
 
 export function* handleError(error) {
@@ -23,7 +25,17 @@ export function* handleError(error) {
 }
 
 export function* editRoleUsersActionHandler(data) {
-  console.log('==data=', data);
+  try {
+    const response = yield call(service.userSevices.editRole, data.data);
+    if (response.status === 200 && response.data.success === true) {
+      yield put(editRoleUserSucceed());
+    } else {
+      // yield put(editRoleUserFailed());
+      console.log('===response==', response);
+    }
+  } catch (err) {
+    yield call(handleError, err);
+  }
 }
 
 export function* delUserHandler(data) {
@@ -32,7 +44,7 @@ export function* delUserHandler(data) {
     if (response.status === 200 && response.data.success === true) {
       yield put(adminDelUserSucceed());
     } else {
-      // yield put(adminAddUserFailed());
+      // yield put(adminDelUserFailed());
       console.log('===response==', response);
     }
   } catch (err) {

@@ -73,6 +73,7 @@ const AddUserDialog = props => {
     // new code here
     addUserHandler(user);
     setUser(initialUser);
+    setValidation(initialErrorValidate);
     switchState.addMultiple ? setOpen(true) : setOpen(false);
   };
 

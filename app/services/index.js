@@ -1,6 +1,11 @@
 import Signup from './registerService';
 import Signin from './loginService';
-import { profileUserPassword, getUsers, delUsers } from './user-services';
+import {
+  profileUserPassword,
+  getUsers,
+  delUsers,
+  editRole,
+} from './user-services';
 
 const servicesExpress = {
   register: Signup,
@@ -9,6 +14,7 @@ const servicesExpress = {
     profileUserPassword,
     getUsers,
     delUsers,
+    editRole,
   },
 };
 

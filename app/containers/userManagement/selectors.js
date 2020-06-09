@@ -25,4 +25,15 @@ const makeSelectDelUserSucceed = () =>
     substate => substate.deleteSucceed,
   );
 
-export { makeSelectUsers, makeSelectAddUserSucceed, makeSelectDelUserSucceed };
+const makeSelectEditUserSucceed = () =>
+  createSelector(
+    selectRegister,
+    substate => substate.editUserSucceed,
+  );
+
+export {
+  makeSelectUsers,
+  makeSelectAddUserSucceed,
+  makeSelectDelUserSucceed,
+  makeSelectEditUserSucceed,
+};
