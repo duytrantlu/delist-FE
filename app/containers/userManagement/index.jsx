@@ -24,7 +24,8 @@ import {
   setDataAddUser as setDataAddUserAction,
   adminDelUserAction,
   editRoleUser as editRoleUserAction
-} from './actions'
+} from './actions';
+import SpeedDial from 'components/speedDial';
 
 const key = 'userManagement';
 
@@ -83,23 +84,7 @@ const userManager = props => {
   const updateMyData = (rowIndex, columnId, value) => {
     // We also turn on the flag to not reset the page
     setSkipPageReset(true)
-    console.log("=rowIndex==", rowIndex)
-    console.log("=columnId==", columnId)
-    console.log("=value==", value)
-    console.log("==dataWithoutMyself=", dataWithoutMyself[rowIndex])
     editRole({user:{...dataWithoutMyself[rowIndex], role: value}})
-    // editRole({})
-    // setData(old =>
-    //   old.map((row, index) => {
-    //     if (index === rowIndex) {
-    //       return {
-    //         ...old[rowIndex],
-    //         [columnId]: value,
-    //       }
-    //     }
-    //     return row
-    //   })
-    // )
   }
 
   return (
@@ -115,6 +100,7 @@ const userManager = props => {
           updateMyData={updateMyData}
           skipPageReset={skipPageReset}
         />
+        <SpeedDial/>
       </div>
     </>
   )
