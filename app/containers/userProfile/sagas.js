@@ -16,7 +16,7 @@ export function* handleError(error) {
 
 export function* editpwdActionHandler(data) {
   try {
-    const response = yield call(service.profileUser, data.data);
+    const response = yield call(service.userSevices.profileUser, data.data);
     if (response.status === 200 && response.data.success === true) {
       yield put(changePasswordActionSucceed());
     } else {

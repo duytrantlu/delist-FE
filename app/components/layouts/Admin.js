@@ -67,14 +67,16 @@ class Admin extends React.Component {
             isAuthenticated={isAuthenticated}
             user={Auth.getUser() ? Auth.getUser().username : ''}
           />
-          <Switch>
+          
             <PrivateRoutes
               isAuthenticated={isAuthenticated}
               role={Auth.getRole()}
             >
-              {this.getRoutes(routes)}
+              <Switch>
+                {this.getRoutes(routes)}
+              </Switch>
             </PrivateRoutes>
-          </Switch>
+          
           <Container fluid>
             <AdminFooter />
           </Container>
