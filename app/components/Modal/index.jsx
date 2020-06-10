@@ -51,7 +51,7 @@ const DialogActions = withStyles((theme) => ({
 }))(MuiDialogActions);
 
 export default function CustomizedDialogs(props) {
-  const {openModal, handleCloseModal} = props;
+  const {openModal, handleCloseModal, uploadCsv} = props;
 
   const handleClose = () => {
     handleCloseModal(false);
@@ -61,10 +61,10 @@ export default function CustomizedDialogs(props) {
     <div>
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={openModal}>
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          Modal title
+          Upload File CSV
         </DialogTitle>
         <DialogContent dividers>
-          <Dropzone/>
+          <Dropzone handleCloseModal={handleCloseModal} uploadCsv={uploadCsv}/>
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleClose} color="primary">

@@ -19,7 +19,8 @@ const actions = [
   { icon: <CloudUploadIcon />, name: 'Upload' },
 ];
 
-export default function OpenIconSpeedDial() {
+export default function OpenIconSpeedDial(props) {
+  const { uploadCsv } = props;
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [openModal, setOpenModal] = React.useState(false);
@@ -36,7 +37,7 @@ export default function OpenIconSpeedDial() {
     setOpenModal(false);
   }
 
-  const handleClick= () =>{
+  const handleClick = () => {
     handleClose();
     setOpenModal(true);
   }
@@ -61,7 +62,7 @@ export default function OpenIconSpeedDial() {
           />
         ))}
       </SpeedDial>
-      {openModal && <ModalUpload openModal={openModal} handleCloseModal={handleCloseModal}/>}
-      </>
+      {openModal && <ModalUpload openModal={openModal} handleCloseModal={handleCloseModal} uploadCsv={uploadCsv}/>}
+    </>
   );
 }

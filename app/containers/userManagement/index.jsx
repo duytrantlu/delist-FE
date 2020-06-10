@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, memo } from 'react'
+import React, { useMemo, useEffect, memo } from 'react';
 
 import { connect } from 'react-redux';
 import { compose } from 'redux';

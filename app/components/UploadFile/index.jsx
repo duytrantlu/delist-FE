@@ -1,24 +1,26 @@
 import React, {useCallback} from 'react';
-import csv from 'csv';
+import Papa from 'papaparse';
 import {useDropzone} from 'react-dropzone';
  
-function MyDropzone() {
+function MyDropzone(props) {
+  const {handleCloseModal, uploadCsv} = props;
   const onDrop = useCallback((acceptedFiles) => {
     acceptedFiles.forEach((file) => {
-      const reader = new FileReader()
- 
-      reader.onabort = () => console.log('file reading was aborted')
-      reader.onerror = () => console.log('file reading has failed')
-      reader.onload = () => {
-      // Do whatever you want with the file contents
-        const text = reader.result
-        csv.parse(text, (err, data) => {
-          if (err) console.log("===err====", err)
-          console.log("===data====", data)
-        })
-        
-      }
-      reader.readAsBinaryString(file)
+      Papa.parse(file, {
+        header: true,
+        transformHeader:function(h) {
+          const newH = h.replace(/[^A-Z0-9]+/ig, '_');
+          return newH.replace(/_$/g, '').trim();
+        },
+        complete: function(result){
+          console.log("====result==", result);
+          uploadCsv(result.data);
+          handleCloseModal(false);
+        },
+        error: function(err){
+          console.log("==errors==", err);
+        }
+      })
     })
     
   }, [])
