@@ -6,7 +6,7 @@ import {
   delUsers,
   editRole,
 } from './user-services';
-
+import { getStore, updateStore, createStore } from './store-services';
 const servicesExpress = {
   register: Signup,
   login: Signin,
@@ -15,6 +15,11 @@ const servicesExpress = {
     getUsers,
     delUsers,
     editRole,
+  },
+  storeServices: {
+    getStore,
+    updateStore,
+    createStore,
   },
 };
 
