@@ -39,6 +39,7 @@ export function* editRoleUsersActionHandler(data) {
 }
 
 export function* delUserHandler(data) {
+  console.log('===data.ids==', data.ids);
   try {
     const response = yield call(service.userSevices.delUsers, data.ids);
     if (response.status === 200 && response.data.success === true) {

@@ -5,12 +5,21 @@
 import { createSelector } from 'reselect';
 import { initialState } from './reducers';
 
-const selectRegister = state => state.order || initialState;
+const selectOrder = state => state.order || initialState;
 
 const makeSelectLoading = () =>
   createSelector(
-    selectRegister,
+    selectOrder,
     substate => substate.loading,
   );
 
-export { makeSelectLoading };
+const makeSelectSyncStatus = () =>
+  createSelector(
+    selectOrder,
+    substate => substate.syncStatus,
+  );
+
+export { 
+  makeSelectLoading,
+  makeSelectSyncStatus
+ };

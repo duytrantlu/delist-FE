@@ -69,6 +69,7 @@
     "@material-ui/core": "^4.10.1",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.55",
+    "@woocommerce/woocommerce-rest-api": "^1.0.1",
     "axios": "^0.19.2",
     "chalk": "2.4.2",
     "chart.js": "^2.9.3",
@@ -79,6 +80,7 @@
     "fontfaceobserver": "2.1.0",
     "history": "4.9.0",
     "hoist-non-react-statics": "3.3.0",
+    "i": "^0.3.6",
     "immer": "3.0.0",
     "intl": "1.2.5",
     "invariant": "2.2.4",
@@ -87,6 +89,7 @@
     "minimist": "1.2.0",
     "namor": "^2.0.2",
     "node-sass": "^4.14.1",
+    "npm": "^6.14.5",
     "papaparse": "^5.2.0",
     "prop-types": "15.7.2",
     "react": "16.8.6",
@@ -104,6 +107,7 @@
     "redux-saga": "1.0.2",
     "reselect": "4.0.0",
     "sanitize.css": "8.0.0",
+    "socket.io-client": "^2.3.0",
     "styled-components": "4.2.0"
   },
   "devDependencies": {

@@ -19,4 +19,21 @@ const makeSelectAddStoreSucceed = () =>
     substate => substate.addStoreSucceed,
   );
 
-export { makeSelectdataStore, makeSelectAddStoreSucceed };
+const makeSelectRemoveStoreSucceed = () =>
+  createSelector(
+    selectStore,
+    substate => substate.removeStoreSucceed,
+  );
+
+const makeSelectEditStoreSucceed = () =>
+  createSelector(
+    selectStore,
+    substate => substate.editStoreSucceed,
+  );
+
+export {
+  makeSelectdataStore,
+  makeSelectAddStoreSucceed,
+  makeSelectRemoveStoreSucceed,
+  makeSelectEditStoreSucceed
+};

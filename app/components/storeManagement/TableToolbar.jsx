@@ -36,7 +36,7 @@ const TableToolbar = props => {
   const {
     numSelected,
     addStoreHandler,
-    deleteUserHandler,
+    removeStoreHandler,
     preGlobalFilteredRows,
     setGlobalFilter,
     globalFilter,
@@ -64,7 +64,7 @@ const TableToolbar = props => {
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton aria-label="delete" onClick={deleteUserHandler}>
+          <IconButton aria-label="delete" onClick={removeStoreHandler}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
@@ -81,8 +81,6 @@ const TableToolbar = props => {
 
 TableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
-  addUserHandler: PropTypes.func.isRequired,
-  deleteUserHandler: PropTypes.func.isRequired,
   setGlobalFilter: PropTypes.func.isRequired,
   preGlobalFilteredRows: PropTypes.array.isRequired,
   globalFilter: PropTypes.string.isRequired,

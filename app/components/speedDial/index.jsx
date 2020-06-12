@@ -5,7 +5,9 @@ import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import EditIcon from '@material-ui/icons/Edit';
-import ModalUpload from 'components/Modal'
+import ModalUpload from 'components/Modal';
+import SyncIcon from '@material-ui/icons/Sync';
+import SyncDisabledIcon from '@material-ui/icons/SyncDisabled';
 
 const useStyles = makeStyles((theme) => ({
   speedDial: {
@@ -16,11 +18,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const actions = [
-  { icon: <CloudUploadIcon />, name: 'Upload' },
+  { icon: <CloudUploadIcon />, name: 'Upload', id: "uploadAction" },
+  { icon: <SyncIcon />, name: 'Sync Data', id: "syncDataAction" },
+  { icon: <SyncDisabledIcon />, name: 'Synchronizing', id: "syncDisable" }
 ];
 
 export default function OpenIconSpeedDial(props) {
-  const { uploadCsv } = props;
+  const { uploadCsv, syncData, syncStatus } = props;
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [openModal, setOpenModal] = React.useState(false);
@@ -42,6 +46,14 @@ export default function OpenIconSpeedDial(props) {
     setOpenModal(true);
   }
 
+  const handleClickSync = () => {
+    syncData();
+  }
+
+  const handleClickSyncDisable = e => {
+    e.preventDefault();
+  } 
+
   return (
     <>
       <SpeedDial
@@ -53,16 +65,40 @@ export default function OpenIconSpeedDial(props) {
         onOpen={handleOpen}
         open={open}
       >
-        {actions.map((action) => (
-          <SpeedDialAction
-            key={action.name}
-            icon={action.icon}
-            tooltipTitle={action.name}
-            onClick={handleClick}
-          />
-        ))}
+        {actions.map((action) => {
+          if (action.id === 'uploadAction') {
+            return (
+              <SpeedDialAction
+                key={action.name}
+                icon={action.icon}
+                tooltipTitle={action.name}
+                onClick={handleClick}
+              />
+            )
+          }
+          if (syncStatus && action.id === 'syncDisable') {
+            return (
+              <SpeedDialAction
+                key={action.name}
+                icon={action.icon}
+                tooltipTitle={action.name}
+                onClick={handleClickSyncDisable}
+              />
+            )
+          }
+          if (!syncStatus && action.id === 'syncDataAction') {
+            return (
+              <SpeedDialAction
+                key={action.name}
+                icon={action.icon}
+                tooltipTitle={action.name}
+                onClick={handleClickSync}
+              />
+            )
+          }
+        })}
       </SpeedDial>
-      {openModal && <ModalUpload openModal={openModal} handleCloseModal={handleCloseModal} uploadCsv={uploadCsv}/>}
+      {openModal && <ModalUpload openModal={openModal} handleCloseModal={handleCloseModal} uploadCsv={uploadCsv} />}
     </>
   );
 }

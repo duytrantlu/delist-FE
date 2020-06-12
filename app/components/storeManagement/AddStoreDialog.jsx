@@ -25,7 +25,7 @@ const initialUser = {
   active: false,
 }
 
-const AddUserDialog = props => {
+const AddStoreDialog = props => {
   const {addStoreHandler} = props;
   const [store, setStore] = useState(initialUser)
   const [open, setOpen] = React.useState(false)
@@ -154,8 +154,8 @@ const AddUserDialog = props => {
   )
 }
 
-AddUserDialog.propTypes = {
-  addUserHandler: PropTypes.func.isRequired,
+AddStoreDialog.propTypes = {
+  addStoreHandler: PropTypes.func.isRequired,
 }
 
-export default AddUserDialog
+export default AddStoreDialog

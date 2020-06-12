@@ -6,7 +6,12 @@ import {
   GET_STORE_SUCCEED,
   GET_STORE_FAILED,
   ADD_STORE,
-  ADD_STORE_SUCCEED
+  ADD_STORE_SUCCEED,
+  REMOVE_STORE,
+  REMOVE_STORE_SUCCEED,
+  EDIT_STORE,
+  EDIT_STORE_SUCCEED,
+  EDIT_STORE_FAILED
 } from './constants';
 
 export const initialState = {
@@ -14,6 +19,8 @@ export const initialState = {
   skipPageReset: false,
   addStoreSucceed: false,
   loading: false,
+  removeStoreSucceed: false,
+  editStoreSucceed: false,
 };
 
 const storeManagementContainerReducer = (state = initialState, action) =>
@@ -22,6 +29,8 @@ const storeManagementContainerReducer = (state = initialState, action) =>
       case GET_STORE_SUCCEED:
         draft.stores = action.store;
         draft.addStoreSucceed = false;
+        draft.removeStoreSucceed = false;
+        draft.editStoreSucceed = false;
         draft.loading = false;
         break;
       case GET_STORE_FAILED:
@@ -33,6 +42,19 @@ const storeManagementContainerReducer = (state = initialState, action) =>
       case ADD_STORE_SUCCEED:
         draft.addStoreSucceed = true;
         draft.loading = false;
+        break;
+      case REMOVE_STORE:
+        draft.loading = true;
+        break;
+      case REMOVE_STORE_SUCCEED:
+        draft.removeStoreSucceed = true;
+        break;
+      case EDIT_STORE:
+        draft.loading = true;
+        break;
+      case EDIT_STORE_SUCCEED:
+        draft.loading = false;
+        draft.editStoreSucceed = true;
         break;
     }
   });

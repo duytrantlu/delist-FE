@@ -7,6 +7,12 @@ import {
   ADD_STORE,
   ADD_STORE_SUCCEED,
   ADD_STORE_FAILED,
+  REMOVE_STORE,
+  REMOVE_STORE_SUCCEED,
+  REMOVE_STORE_FAILED,
+  EDIT_STORE,
+  EDIT_STORE_SUCCEED,
+  EDIT_STORE_FAILED
 } from './constants';
 
 export const getStore = () => ({
@@ -26,3 +32,30 @@ export const setAddStore = data => ({
 export const setAddStoreSucceed = () => ({
   type: ADD_STORE_SUCCEED,
 });
+
+export const removeStore = ids => ({
+  type: REMOVE_STORE,
+  ids
+});
+
+export const removeStoreSucceed = () => ({
+  type: REMOVE_STORE_SUCCEED
+});
+
+export const removeStoreFailed = () => ({
+  type: REMOVE_STORE_FAILED,
+});
+
+export const editStore = newStore => ({
+  type: EDIT_STORE,
+  newStore
+});
+
+export const editStoreSucceed = () => ({
+  type: EDIT_STORE_SUCCEED,
+});
+
+export const editStoreFailed = () => ({
+  type: EDIT_STORE_FAILED,
+});
+

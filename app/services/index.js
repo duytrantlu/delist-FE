@@ -6,7 +6,15 @@ import {
   delUsers,
   editRole,
 } from './user-services';
-import { getStore, updateStore, createStore } from './store-services';
+import {
+  getStore,
+  updateStore,
+  createStore,
+  removeStore
+} from './store-services';
+import {
+  getListOrderFromWoo
+} from './woo';
 const servicesExpress = {
   register: Signup,
   login: Signin,
@@ -20,7 +28,11 @@ const servicesExpress = {
     getStore,
     updateStore,
     createStore,
+    removeStore
   },
+  wooServices:{
+    getListOrderFromWoo
+  }
 };
 
 export default servicesExpress;

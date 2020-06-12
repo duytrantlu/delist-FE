@@ -53,11 +53,15 @@ const EditableCell = ({
   updateMyData, // This is a custom function that we supplied to our table instance
 }) => {
   // We need to keep and update the state of the cell normally
-  const [value, setValue] = React.useState(initialValue)
+  const [value, setValue] = React.useState(initialValue);
 
   const onChange = e => {
-    console.log("===eee===", e);
-    setValue(e.target.value)
+    if( e.target.type==='checkbox'){
+      setValue(e.target.checked);
+    } else {
+      setValue(e.target.value)
+    }
+    
   }
 
   // We'll only update the external data when the input is blurred
@@ -76,6 +80,7 @@ const EditableCell = ({
         onChange={onChange}
         name="active"
         color="primary"
+        onBlur={onBlur}
       />
     )
   }
@@ -110,7 +115,7 @@ const defaultColumn = {
 const EnhancedTable = ({
   columns,
   data,
-  // setData,
+  removeStore,
   setAddStore,
   updateMyData,
   skipPageReset,
@@ -180,14 +185,20 @@ const EnhancedTable = ({
   }
 
   const removeByIndexs = (array, indexs) =>
-    array.filter((_, i) => !indexs.includes(i))
+    array.filter((_, i) => indexs.includes(i))
 
-  const deleteUserHandler = event => {
+  const removeStoreHandler = event => {
     const newData = removeByIndexs(
       data,
       Object.keys(selectedRowIds).map(x => parseInt(x, 10))
-    )
-    // setData(newData)
+    );
+    const ids = [];
+    if (newData) {
+      newData.forEach(v => {
+        ids.push(v._id);
+      });
+    }
+    removeStore(ids)
   }
 
   const addStoreHandler = store => {
@@ -199,7 +210,7 @@ const EnhancedTable = ({
     <TableContainer>
       <TableToolbar
         numSelected={Object.keys(selectedRowIds).length}
-        // deleteUserHandler={deleteUserHandler}
+        removeStoreHandler={removeStoreHandler}
         addStoreHandler={addStoreHandler}
         preGlobalFilteredRows={preGlobalFilteredRows}
         setGlobalFilter={setGlobalFilter}
@@ -277,7 +288,6 @@ EnhancedTable.propTypes = {
   columns: PropTypes.array.isRequired,
   data: PropTypes.array.isRequired,
   updateMyData: PropTypes.func.isRequired,
-  setData: PropTypes.func.isRequired,
   skipPageReset: PropTypes.bool.isRequired,
 }
 

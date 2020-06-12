@@ -15,11 +15,15 @@ import Column from './makeTable';
 
 import {
   makeSelectdataStore,
-  makeSelectAddStoreSucceed
+  makeSelectAddStoreSucceed,
+  makeSelectRemoveStoreSucceed,
+  makeSelectEditStoreSucceed
 } from './selectors';
 import {
   getStore as getStoreAction,
-  setAddStore as setAddStoreAction
+  setAddStore as setAddStoreAction,
+  removeStore as removeStoreAction,
+  editStore as editStoreAction,
 
 } from './actions';
 
@@ -31,6 +35,10 @@ const storeManager = props => {
     getStore,
     setAddStore,
     addStoreSucceed,
+    removeStore,
+    removeStoreSucceed,
+    editStore,
+    editStoreSucceed
   } = props;
   const columns = React.useMemo(
     () => Column,
@@ -39,17 +47,18 @@ const storeManager = props => {
   useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
 
-  useEffect(()=>{
+  useEffect(() => {
     getStore();
   }, []);
 
   useEffect(() => {
-    if (addStoreSucceed) {
+    if (addStoreSucceed || removeStoreSucceed || editStoreSucceed) {
       getStore();
     }
-  }, [addStoreSucceed]);
+  }, [addStoreSucceed, removeStoreSucceed, editStoreSucceed]);
 
   const [skipPageReset, setSkipPageReset] = React.useState(false)
+
 
   // We need to keep the table from resetting the pageIndex when we
   // Update data. So we can keep track of that flag with a ref.
@@ -59,8 +68,19 @@ const storeManager = props => {
   // original data
   const updateMyData = (rowIndex, columnId, value) => {
     // We also turn on the flag to not reset the page
-    setSkipPageReset(true)
-    // editRole({user:{...dataWithoutMyself[rowIndex], role: value}})
+    setSkipPageReset(true);
+    const storeOriginal = dataStore[rowIndex];
+    const newStore = {
+      name: storeOriginal.name,
+      baseUrl: storeOriginal.baseUrl,
+      consumerKey: storeOriginal.consumerKey,
+      consumerSecret: storeOriginal.consumerSecret,
+      typeStore: storeOriginal.typeStore,
+      active: storeOriginal.active,
+      _id: storeOriginal._id
+    }
+
+    editStore({store: {...newStore, [columnId]: value}});
   }
 
   return (
@@ -72,7 +92,7 @@ const storeManager = props => {
           columns={columns}
           data={dataStore}
           setAddStore={setAddStore}
-          // delUser={delUser}
+          removeStore={removeStore}
           updateMyData={updateMyData}
           skipPageReset={skipPageReset}
         />
@@ -83,13 +103,17 @@ const storeManager = props => {
 
 const mapStateToProps = createStructuredSelector({
   dataStore: makeSelectdataStore(),
-  addStoreSucceed: makeSelectAddStoreSucceed()
+  addStoreSucceed: makeSelectAddStoreSucceed(),
+  removeStoreSucceed: makeSelectRemoveStoreSucceed(),
+  editStoreSucceed: makeSelectEditStoreSucceed(),
 });
 
 export const mapDispatchToProps = dispatch => ({
   dispatch,
   getStore: () => dispatch(getStoreAction()),
   setAddStore: data => dispatch(setAddStoreAction(data)),
+  removeStore: data => dispatch(removeStoreAction(data)),
+  editStore: data => dispatch(editStoreAction(data)),
 });
 
 const withConnect = connect(

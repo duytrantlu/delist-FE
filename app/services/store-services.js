@@ -8,4 +8,6 @@ const updateStore = async data => Request.put(`${baseUrl}/api/stores`, data);
 
 const createStore = async data => Request.post(`${baseUrl}/api/stores`, data);
 
-export { getStore, updateStore, createStore };
+const removeStore = async data => Request.delete(`${baseUrl}/api/stores/${data}`);
+
+export { getStore, updateStore, createStore, removeStore };
