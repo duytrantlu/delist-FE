@@ -56,6 +56,7 @@ const EditableCell = ({
   const [value, setValue] = React.useState(initialValue)
 
   const onChange = e => {
+    console.log("===eee===", e);
     setValue(e.target.value)
   }
 
@@ -68,7 +69,16 @@ const EditableCell = ({
   React.useEffect(() => {
     setValue(initialValue)
   }, [initialValue])
-
+  if(id === 'active'){
+    return (
+      <Checkbox
+        checked={value}
+        onChange={onChange}
+        name="active"
+        color="primary"
+      />
+    )
+  }
   return (
     <input
       style={inputStyle}
