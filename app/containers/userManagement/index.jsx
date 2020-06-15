@@ -25,7 +25,6 @@ import {
   adminDelUserAction,
   editRoleUser as editRoleUserAction
 } from './actions';
-import SpeedDial from 'components/speedDial';
 
 const key = 'userManagement';
 
@@ -100,7 +99,6 @@ const userManager = props => {
           updateMyData={updateMyData}
           skipPageReset={skipPageReset}
         />
-        <SpeedDial/>
       </div>
     </>
   )

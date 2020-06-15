@@ -1,0 +1,5 @@
+@media (max-width: 768px) {
+  .footerNavbarCollapse {
+    display: none; } 
+  .main-content {
+    margin-left: 0px !important; }}

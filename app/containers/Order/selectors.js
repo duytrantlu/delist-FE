@@ -19,7 +19,35 @@ const makeSelectSyncStatus = () =>
     substate => substate.syncStatus,
   );
 
-export { 
+const makeSelectOrders = () =>
+  createSelector(
+    selectOrder,
+    substate => substate.listOrders,
+  );
+
+const makeSelectPages = () =>
+  createSelector(
+    selectOrder,
+    substate => substate.pages,
+  );
+
+const makeSelectTotalItems = () =>
+  createSelector(
+    selectOrder,
+    substate => substate.totalItems,
+  );
+
+const makeSelectTableLoading = () =>
+  createSelector(
+    selectOrder,
+    substate => substate.tableLoading,
+  );
+
+export {
   makeSelectLoading,
-  makeSelectSyncStatus
- };
+  makeSelectSyncStatus,
+  makeSelectOrders,
+  makeSelectTableLoading,
+  makeSelectPages,
+  makeSelectTotalItems
+};

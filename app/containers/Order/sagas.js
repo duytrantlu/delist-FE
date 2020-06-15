@@ -2,13 +2,19 @@
 
 import { call, put, takeLatest, all, fork } from 'redux-saga/effects';
 import { handleGenericError } from 'utils/handleGenericError';
+import _ from 'lodash';
 import service from 'services';
 import {
   UPLOAD_CSV,
-  SYCN_DATA_STORE
+  SYCN_DATA_STORE,
+  GET_ORDERS,
 } from './constants';
 import {
-  uploadCsvSucceed
+  uploadCsvSucceed,
+  syncDataSucceed,
+  syncDataFailed,
+  getOrdersSucceed,
+  getOrdersFailed
 } from './actions';
 
 export function* handleError(error) {
@@ -24,20 +30,103 @@ export function* uploadCsvActionHandler(data) {
   yield put(uploadCsvSucceed());
 }
 
+export function* getOrderActionHandler(data){
+  
+  try{
+    const response = yield call(service.orderServices.getOrders, data.options);
+    if(response.status === 200 && response.data.docs.length > 0){
+      // const stores = yield call(service.storeServices.getStore);
+      // const storeApis = stores.data.docs;
+      
+      // response.data.docs.map(async st => {
+      //   const customer = await service.wooServices.getCustomerInfo(storeApis, st.customer_id, st.store);
+      //   console.log("====customer===", customer);
+      // })
+      console.log("===response.data===", response.data);
+      yield put(getOrdersSucceed({
+        orders: response.data.docs,
+        pages: response.data.pages,
+        itemCount: response.data.total
+      }));
+    }
+  }catch (err) {
+    console.log("===err get order===", err);
+  }
+}
+
+function extractHostname(url) {
+  let hostname;
+  //find & remove protocol (http, ftp, etc.) and get hostname
+
+  if (url.indexOf("//") > -1) {
+    hostname = url.split('/')[2];
+  }
+  else {
+    hostname = url.split('/')[0];
+  }
+
+  //find & remove port number
+  hostname = hostname.split(':')[0];
+  //find & remove "?"
+  hostname = hostname.split('?')[0];
+
+  return hostname.split('.')[0];
+}
+
+function* requestStoreWoo(docs, maxPage) {
+  try {
+    const storeAPIs = docs;
+    let i = 2;
+    while (i <= maxPage) {
+      const listOrder = yield call(service.wooServices.getListOrderFromWoo, storeAPIs, i);
+      const orders = [];
+      listOrder.forEach(os => {
+        const orderContainStore = os.data.map(d => {
+          return { ...d, store: extractHostname(os.config.url) }
+        });
+        orders.push(orderContainStore);
+      });
+      const newList = _.flatten(orders);
+      yield call(service.orderServices.syncData, { listOrder: newList });
+      i++;
+    }
+    yield put(syncDataSucceed())
+  } catch (err) {
+    yield put(syncDataFailed(rs.data.err))
+  }
+}
+
 export function* syncDataActionHandler() {
   try {
     const response = yield call(service.storeServices.getStore);
     if (response.status === 200 && response.data.docs.length > 0) {
-      const listOrder = yield call(service.wooServices.getListOrderFromWoo, response.data.docs);
-      console.log("===response= syncDataActionHandler==", listOrder);
+      const storeApis = response.data.docs;
+      const listOrder = yield call(service.wooServices.getListOrderFromWoo, storeApis);
+      const orders = [];
+      const totalPage = [];
+      listOrder.forEach(os => {
+        totalPage.push(os.headers['x-wp-totalpages']);
+        const orderContainStore = os.data.map(d => {
+          return { ...d, store: extractHostname(os.config.url) }
+        });
+        orders.push(orderContainStore);
+      });
+      const newList = _.flatten(orders);
+      console.log("===newlist===", newList);
+      // const rs = yield call(service.orderServices.syncData, { listOrder: newList });
+      // const maxPage = _.max(totalPage);
+      // if (maxPage > 1) {
+      //   yield call(requestStoreWoo, storeApis, maxPage);
+      // } else {
+      //   if (rs.data.success) {
+      //     yield put(syncDataSucceed())
+      //   } else {
+      //     yield put(syncDataFailed(rs.data.err))
+      //   }
+      // }
     }
-    // if(response.status === 200 && response.data.docs.length){
-    //   yield put(getStoreSucceed(response.data.docs))
-    // } else {
-    //   console.log("===response= getStoresActionHandler==", response);
-    // }
   } catch (err) {
-    console.log("===err===", err);
+    yield put(syncDataFailed(err))
   }
 }
 
@@ -49,9 +138,14 @@ export function* uploadCsvHandlerWatcher() {
   yield takeLatest(UPLOAD_CSV, uploadCsvActionHandler);
 }
 
+export function* getOrderHandlerWatcher() {
+  yield takeLatest(GET_ORDERS, getOrderActionHandler);
+}
+
 export default function* watchSaga() {
   yield all([
     fork(uploadCsvHandlerWatcher),
     fork(syncDataStoreHandlerWatcher),
+    fork(getOrderHandlerWatcher),
   ]);
 }

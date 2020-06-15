@@ -5,15 +5,27 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 // reactstrap components
 import { Container } from 'reactstrap';
 // core components
-import AdminNavbar from 'components/Navbars/AdminNavbar.js';
-import AdminFooter from 'components/Footers/AdminFooter.js';
+import AdminNavbar from 'components/Navbars/AdminNavbar';
+import AdminFooter from 'components/Footers/AdminFooter';
 import Sidebar from 'components/Sidebar/Sidebar.js';
 import PrivateRoutes from 'containers/PrivateRoute';
 import Auth from 'utils/Auth';
-
 import routes from 'routes.js';
+import './layouts.css';
 
 class Admin extends React.Component {
+  state = {
+    isOpenColapse: true
+  };
+
+  handleCollapse = () => {
+    this.setState({isOpenColapse:false});
+  }
+
+  handleExpand = () => {
+    this.setState({isOpenColapse:true});
+  }
+
   componentDidUpdate(e) {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
@@ -54,29 +66,32 @@ class Admin extends React.Component {
         <Sidebar
           {...this.props}
           routes={routes}
+          handleCollapse={this.handleCollapse}
+          handleExpand={this.handleExpand}
+          isOpenColapse={this.state.isOpenColapse}
           logo={{
             innerLink: '/admin/index',
             imgSrc: require('assets/img/brand/argon-react.png'),
             imgAlt: '...',
           }}
         />
-        <div className="main-content" ref="mainContent">
+        <div className="main-content" style={this.state.isOpenColapse ?{"marginLeft": '250px'} : {"marginLeft": '90px'}} ref="mainContent">
           <AdminNavbar
             {...this.props}
             brandText={this.getBrandText(this.props.location.pathname)}
             isAuthenticated={isAuthenticated}
             user={Auth.getUser() ? Auth.getUser().username : ''}
           />
-          
-            <PrivateRoutes
-              isAuthenticated={isAuthenticated}
-              role={Auth.getRole()}
-            >
-              <Switch>
-                {this.getRoutes(routes)}
-              </Switch>
-            </PrivateRoutes>
-          
+
+          <PrivateRoutes
+            isAuthenticated={isAuthenticated}
+            role={Auth.getRole()}
+          >
+            <Switch>
+              {this.getRoutes(routes)}
+            </Switch>
+          </PrivateRoutes>
+
           <Container fluid>
             <AdminFooter />
           </Container>
