@@ -1,5 +1,4 @@
-import WooCommerceRestApi from "@woocommerce/woocommerce-rest-api";
-
+import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api';
 
 const getListOrderFromWoo = async (instanceStore, page = 1, pageSize = 10) => {
   const wooCommerce = instanceStore.map(store => {
@@ -8,14 +7,17 @@ const getListOrderFromWoo = async (instanceStore, page = 1, pageSize = 10) => {
         url: store.baseUrl,
         consumerKey: store.consumerKey,
         consumerSecret: store.consumerSecret,
-        version: "wc/v3"
+        version: 'wc/v3',
       });
     }
   });
-  const result = await Promise.all(wooCommerce.filter(woo => woo != undefined).map(woo => woo.get(`orders?per_page=${pageSize}&page=${page}`)));
+  const result = await Promise.all(
+    wooCommerce
+      .filter(woo => woo != undefined)
+      .map(woo => woo.get(`orders?per_page=${pageSize}&page=${page}`)),
+  );
   return result;
-}
-
+};
 
 const getCustomerInfo = async (instanceStore, id, storeName) => {
   const wooCommerce = instanceStore.map(store => {
@@ -24,14 +26,15 @@ const getCustomerInfo = async (instanceStore, id, storeName) => {
         url: store.baseUrl,
         consumerKey: store.consumerKey,
         consumerSecret: store.consumerSecret,
-        version: "wc/v3"
+        version: 'wc/v3',
       });
     }
   });
-  const result = await Promise.all(wooCommerce.filter(woo => woo != undefined).map(woo => woo.get(`customers/${id}`)));
+  const result = await Promise.all(
+    wooCommerce
+      .filter(woo => woo != undefined)
+      .map(woo => woo.get(`customers/${id}`)),
+  );
   return result;
-}
-export {
-  getListOrderFromWoo,
-  getCustomerInfo
-}
+};
+export { getListOrderFromWoo, getCustomerInfo };

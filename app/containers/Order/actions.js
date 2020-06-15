@@ -6,7 +6,7 @@ import {
   SYCN_DATA_STORE_FAILED,
   GET_ORDERS,
   GET_ORDERS_SUCCEED,
-  GET_ORDERS_FAILED
+  GET_ORDERS_FAILED,
 } from './constants';
 
 export const uploadCsvFileAction = data => ({
@@ -28,20 +28,20 @@ export const syncDataSucceed = () => ({
 
 export const syncDataFailed = err => ({
   type: SYCN_DATA_STORE_FAILED,
-  err
+  err,
 });
 
 export const getOrders = (page, limit) => ({
-  type:GET_ORDERS,
-  options: {page, limit}
+  type: GET_ORDERS,
+  options: { page, limit },
 });
 
-export const getOrdersSucceed = listOrder =>({
-  type:GET_ORDERS_SUCCEED,
-  listOrder
+export const getOrdersSucceed = listOrder => ({
+  type: GET_ORDERS_SUCCEED,
+  listOrder,
 });
 
-export const getOrdersFailed = err =>({
-  type:GET_ORDERS_FAILED,
-  err
+export const getOrdersFailed = err => ({
+  type: GET_ORDERS_FAILED,
+  err,
 });

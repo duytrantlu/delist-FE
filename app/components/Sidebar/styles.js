@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-
 const FooterNavbarDiv = styled.div`
   position: relative;
 `;
@@ -17,17 +16,11 @@ const spanStyle = {
   position: 'absolute',
   top: '22px',
   right: '95px',
-}
+};
 
 const expandSpanStyle = {
   ...spanStyle,
   right: '6px',
-}
+};
 
-
-
-export {
-  FooterNavbarDiv,
-  spanStyle,
-  expandSpanStyle
-}
+export { FooterNavbarDiv, spanStyle, expandSpanStyle };

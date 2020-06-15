@@ -49,5 +49,5 @@ export {
   makeSelectOrders,
   makeSelectTableLoading,
   makeSelectPages,
-  makeSelectTotalItems
+  makeSelectTotalItems,
 };

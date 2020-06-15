@@ -10,17 +10,11 @@ import {
   getStore,
   updateStore,
   createStore,
-  removeStore
+  removeStore,
 } from './store-services';
-import {
-  getListOrderFromWoo,
-  getCustomerInfo
-} from './woo';
+import { getListOrderFromWoo, getCustomerInfo } from './woo';
 
-import {
-  syncData,
-  getOrders
-} from './orderService';
+import { syncData, getOrders } from './orderService';
 const servicesExpress = {
   register: Signup,
   login: Signin,
@@ -34,16 +28,16 @@ const servicesExpress = {
     getStore,
     updateStore,
     createStore,
-    removeStore
+    removeStore,
   },
-  wooServices:{
+  wooServices: {
     getListOrderFromWoo,
-    getCustomerInfo
+    getCustomerInfo,
   },
   orderServices: {
     syncData,
-    getOrders
-  }
+    getOrders,
+  },
 };
 
 export default servicesExpress;
