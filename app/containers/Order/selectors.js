@@ -43,6 +43,24 @@ const makeSelectTableLoading = () =>
     substate => substate.tableLoading,
   );
 
+const makeSelectSyncDataSucceed = () =>
+  createSelector(
+    selectOrder,
+    substate => substate.syncDataSucceed,
+  );
+
+const makeSelectdataStore = () =>
+  createSelector(
+    selectOrder,
+    substate => substate.stores,
+  );
+
+const makeSelectStatusGetStore = () =>
+  createSelector(
+    selectOrder,
+    substate => substate.getStoreStatus,
+  );
+
 export {
   makeSelectLoading,
   makeSelectSyncStatus,
@@ -50,4 +68,7 @@ export {
   makeSelectTableLoading,
   makeSelectPages,
   makeSelectTotalItems,
+  makeSelectSyncDataSucceed,
+  makeSelectdataStore,
+  makeSelectStatusGetStore
 };

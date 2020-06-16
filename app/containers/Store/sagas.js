@@ -26,8 +26,8 @@ export function* addStoreActionHandler(data) {
   try {
     const response = yield call(service.storeServices.createStore, data.data);
     yield put(setAddStoreSucceed())
-    
-  } catch(err) {
+
+  } catch (err) {
     console.log("===err===", err);
   }
 }
@@ -35,12 +35,12 @@ export function* addStoreActionHandler(data) {
 export function* getStoresActionHandler() {
   try {
     const response = yield call(service.storeServices.getStore);
-    if(response.status === 200 && response.data.docs.length){
+    if (response.status === 200 && response.data.docs.length) {
       yield put(getStoreSucceed(response.data.docs))
     } else {
       console.log("===response= getStoresActionHandler==", response);
     }
-  } catch(err) {
+  } catch (err) {
     console.log("===err===", err);
   }
 }
@@ -48,12 +48,12 @@ export function* getStoresActionHandler() {
 export function* removeStoreActionHandler(data) {
   try {
     const response = yield call(service.storeServices.removeStore, data.ids);
-    if(response.status === 200 && response.data.success === true){
+    if (response.status === 200 && response.data.success === true) {
       yield put(removeStoreSucceed())
     } else {
       console.log("===response= removeStoreActionHandlerremoveStoreActionHandler==", response);
     }
-  } catch(err) {
+  } catch (err) {
     console.log("===err===", err);
   }
 }
@@ -61,12 +61,12 @@ export function* removeStoreActionHandler(data) {
 export function* editStoreActionHandler(data) {
   try {
     const response = yield call(service.storeServices.updateStore, data.newStore);
-    if(response.status === 200 && response.data.success === true){
+    if (response.status === 200 && response.data.success === true) {
       yield put(editStoreSucceed())
     } else {
       console.log("===response= editStoreActionHandler==", response);
     }
-  } catch(err) {
+  } catch (err) {
     console.log("===err===", err);
   }
 }

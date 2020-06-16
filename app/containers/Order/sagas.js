@@ -8,13 +8,16 @@ import {
   UPLOAD_CSV,
   SYCN_DATA_STORE,
   GET_ORDERS,
+  GET_STORE
 } from './constants';
 import {
   uploadCsvSucceed,
   syncDataSucceed,
   syncDataFailed,
   getOrdersSucceed,
-  getOrdersFailed
+  getOrdersFailed,
+  getStoreSucceed,
+  getStoreFailed
 } from './actions';
 
 export function* handleError(error) {
@@ -31,9 +34,9 @@ export function* uploadCsvActionHandler(data) {
 }
 
 export function* getOrderActionHandler(data){
-  
   try{
     const response = yield call(service.orderServices.getOrders, data.options);
+    console.log("===response===", response);
     if(response.status === 200 && response.data.docs.length > 0){
       // const stores = yield call(service.storeServices.getStore);
       // const storeApis = stores.data.docs;
@@ -42,7 +45,12 @@ export function* getOrderActionHandler(data){
       //   const customer = await service.wooServices.getCustomerInfo(storeApis, st.customer_id, st.store);
       //   console.log("====customer===", customer);
       // })
-      console.log("===response.data===", response.data);
+      yield put(getOrdersSucceed({
+        orders: response.data.docs,
+        pages: response.data.pages,
+        itemCount: response.data.total
+      }));
+    } else {
       yield put(getOrdersSucceed({
         orders: response.data.docs,
         pages: response.data.pages,
@@ -113,20 +121,34 @@ export function* syncDataActionHandler() {
       });
       const newList = _.flatten(orders);
       console.log("===newlist===", newList);
-      // const rs = yield call(service.orderServices.syncData, { listOrder: newList });
-      // const maxPage = _.max(totalPage);
-      // if (maxPage > 1) {
-      //   yield call(requestStoreWoo, storeApis, maxPage);
-      // } else {
-      //   if (rs.data.success) {
-      //     yield put(syncDataSucceed())
-      //   } else {
-      //     yield put(syncDataFailed(rs.data.err))
-      //   }
-      // }
+      const rs = yield call(service.orderServices.syncData, { listOrder: newList });
+      const maxPage = _.max(totalPage);
+      if (maxPage > 1) {
+        yield call(requestStoreWoo, storeApis, maxPage);
+      } else {
+        if (rs.data.success) {
+          yield put(syncDataSucceed())
+        } else {
+          yield put(syncDataFailed(rs.data.err))
+        }
+      }
     }
   } catch (err) {
     yield put(syncDataFailed(err))
+  }
+}
+
+function* getStoreActionHandler() {
+   
+  try{
+    const response = yield call(service.storeServices.getStore);
+    if(response.status === 200 && response.data.docs.length > 0){
+      yield put(getStoreSucceed(response.data.docs));
+    } else {
+      yield put(getStoreSucceed(response.data));
+    }
+  }catch (err) {
+    console.log("===err get order===", err);
   }
 }
 
@@ -142,10 +164,15 @@ export function* getOrderHandlerWatcher() {
   yield takeLatest(GET_ORDERS, getOrderActionHandler);
 }
 
+export function* getStoreHandlerWatcher() {
+  yield takeLatest(GET_ORDERS, getStoreActionHandler);
+}
+
 export default function* watchSaga() {
   yield all([
     fork(uploadCsvHandlerWatcher),
     fork(syncDataStoreHandlerWatcher),
     fork(getOrderHandlerWatcher),
+    fork(getStoreHandlerWatcher),
   ]);
 }

@@ -8,3 +8,6 @@ export const SYCN_DATA_STORE_FAILED = 'containers/Order/SYCN_DATA_STORE_FAILED';
 export const GET_ORDERS = 'containers/Order/GET_ORDERS';
 export const GET_ORDERS_SUCCEED = 'containers/Order/GET_ORDERS_SUCCEED';
 export const GET_ORDERS_FAILED = 'containers/Order/GET_ORDERS_FAILED';
+export const GET_STORE = 'containers/Order/GET_STORE';
+export const GET_STORE_SUCCEED = 'containers/Order/GET_STORE_SUCCEED';
+export const GET_STORE_FAILED = 'containers/Order/GET_STORE_FAILED';

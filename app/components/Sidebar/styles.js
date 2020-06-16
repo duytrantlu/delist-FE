@@ -15,12 +15,12 @@ const spanStyle = {
   lineHeight: '20px',
   position: 'absolute',
   top: '22px',
-  right: '95px',
+  right: '50%',
 };
 
 const expandSpanStyle = {
   ...spanStyle,
-  right: '6px',
+  right: '40%',
 };
 
 export { FooterNavbarDiv, spanStyle, expandSpanStyle };

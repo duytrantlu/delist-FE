@@ -10,17 +10,23 @@ import {
   SYCN_DATA_STORE_FAILED,
   GET_ORDERS,
   GET_ORDERS_SUCCEED,
-  GET_ORDERS_FAILED
+  GET_ORDERS_FAILED,
+  GET_STORE,
+  GET_STORE_SUCCEED,
+  GET_STORE_FAILED
 } from './constants';
 
 export const initialState = {
   loading: false,
   syncStatus: false,
   syncDataFailed: [],
+  syncDataSucceed: false,
   listOrders: [],
   pages: 0,
-  totalItems:0,
+  totalItems: 0,
   tableLoading: false,
+  stores: [],
+  getStoreStatus: false,
 };
 
 const ordertContainerReducer = (state = initialState, action) =>
@@ -31,6 +37,7 @@ const ordertContainerReducer = (state = initialState, action) =>
         break;
       case GET_ORDERS_SUCCEED:
         draft.tableLoading = false;
+        draft.syncDataSucceed = false;
         draft.listOrders = action.listOrder.orders;
         draft.pages = action.listOrder.pages;
         draft.totalItems = action.listOrder.itemCount;
@@ -40,6 +47,17 @@ const ordertContainerReducer = (state = initialState, action) =>
         draft.listOrders = [];
         draft.pages = 0;
         draft.totalItems = 0;
+        break;
+      case GET_STORE:
+        draft.getStoreStatus = true;
+        draft.stores = [];
+        break;
+      case GET_STORE_SUCCEED:
+        draft.stores = action.stores;
+        draft.getStoreStatus = false;
+        break;
+      case GET_STORE_FAILED:
+        draft.stores = [];
         break;
       case UPLOAD_CSV:
         draft.loading = true;
@@ -53,6 +71,7 @@ const ordertContainerReducer = (state = initialState, action) =>
         break;
       case SYCN_DATA_STORE_SUCCEED:
         draft.syncStatus = false;
+        draft.syncDataSucceed = true;
         draft.syncDataFailed = [];
         break;
       case SYCN_DATA_STORE_FAILED:
