@@ -14,9 +14,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 
 import Select from 'react-select';
-import { addDays } from 'date-fns';
-import dateFormat from 'dateformat';
-
+import { addDays, subMonths } from 'date-fns';
 
 import IconButton from "@material-ui/core/IconButton";
 import { Button } from '@material-ui/core';
@@ -48,20 +46,12 @@ import {
 
 // reactstrap components
 import {
-  Badge,
   Card,
   CardHeader,
   CardFooter,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
-  DropdownToggle,
-  Media,
-  Progress,
   Table,
   Container,
   Row,
-  UncontrolledTooltip,
 } from 'reactstrap';
 import { TablePagination } from '@trendmicro/react-paginations';
 import '@trendmicro/react-paginations/dist/react-paginations.css';
@@ -126,20 +116,20 @@ const Order = props => {
     getStore,
     getStoreStatus
   } = props;
-  console.log(listOrders)
   useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
   const [currentPage, setCurrentPage] = React.useState(1);
   const [pageLength, setPageLength] = React.useState(10);
   const [selectedStore, setSelectedStore] = React.useState([]);
-  const [selectedPaymentMethod, setSelectedStorePaymentMethod] = React.useState([{ label: "Any", value: "" }]);
-  const [selectedPaypal, setSelectedStorePaypal] = React.useState([{ label: "Any", value: "" }]);
-  const [selectedShipped, setSelectedStoreShipped] = React.useState([{ label: "Any", value: "" }]);
+  const [selectedEmail, setSelectedEmail] = React.useState("");
+  const [selectedPaymentMethod, setSelectedStorePaymentMethod] = React.useState({ label: "Any", value: "" });
+  const [selectedPaypal, setSelectedStorePaypal] = React.useState({ label: "Any", value: "" });
+  const [selectedShipped, setSelectedStoreShipped] = React.useState({ label: "Any", value: "" });
   const [selectedDateType, setselectedDateType] = React.useState([{ label: "Created date", value: 'date_created' }]);
   const [selectedStatus, setSelectedStatus] = React.useState([]);
   const [stateTimeRange, setStateTimeRange] = React.useState([
     {
-      startDate: new Date(),
+      startDate: subMonths(new Date(), 1),
       endDate: addDays(new Date(), 7),
       key: 'selection'
     }
@@ -214,33 +204,37 @@ const Order = props => {
   const handleSelectedDateType = selectedOption => {
     setselectedDateType(selectedOption)
   }
+
   const makeFilter = () => {
     const storesSelected = [];
     const statusOrderSelected = [];
-    selectedStore.map(s =>{
+    if(selectedStore) selectedStore.map(s =>{
       storesSelected.push(s.label);
     });
-    selectedStatus.map(o => {
+    if(selectedStatus) selectedStatus.map(o => {
       statusOrderSelected.push(o.value)
-    })
+    });
     const filter = [
       {
         store: storesSelected
       },
       {
-        payment_method: selectedPaymentMethod[0].value
+        payment_method: selectedPaymentMethod.value
       },
       {
-        updated_paypal: selectedPaypal[0].value
+        updated_paypal: selectedPaypal.value
       },
       {
         status: statusOrderSelected
       },
       {
-        shipped: selectedShipped[0].value
+        shipped: selectedShipped.value
       },
       {
         createdAt: `${stateTimeRange[0].startDate.toISOString()}/${stateTimeRange[0].endDate.toISOString()}`
+      },
+      {
+        email: selectedEmail
       }
     ]
     return filter;
@@ -248,6 +242,7 @@ const Order = props => {
   const handleFilter = e => {
     e.preventDefault();
     const filter = makeFilter();
+    console.log("==filter=", filter);
     getOrders(1, 10, filter);
   }
   const classes = useStyles();
@@ -348,7 +343,7 @@ const Order = props => {
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText></InputGroupText>
                       </InputGroupAddon>
-                      <Input placeholder="Filter by Email, Phone ..." />
+                      <Input placeholder="Filter by Email, Phone ..." onChange={e => setSelectedEmail(e.target.value)} value={selectedEmail}/>
                     </InputGroup>
                     <br />
                     <div>

@@ -27,14 +27,14 @@ const storeManagementContainerReducer = (state = initialState, action) =>
   produce(state, draft => {
     switch (action.type) {
       case GET_STORE_SUCCEED:
-        draft.stores = action.store;
+        draft.stores = action.store || [];
         draft.addStoreSucceed = false;
         draft.removeStoreSucceed = false;
         draft.editStoreSucceed = false;
         draft.loading = false;
         break;
       case GET_STORE_FAILED:
-        draft.users = [];
+        draft.stores = [];
         break;
       case ADD_STORE:
         draft.loading = true;

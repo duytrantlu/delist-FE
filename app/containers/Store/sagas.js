@@ -36,11 +36,12 @@ export function* getStoresActionHandler() {
   try {
     const response = yield call(service.storeServices.getStore);
     if (response.status === 200 && response.data.docs.length) {
-      yield put(getStoreSucceed(response.data.docs))
+      yield put(getStoreSucceed(response.data.docs));
     } else {
-      console.log("===response= getStoresActionHandler==", response);
+      yield put(getStoreSucceed(response.data.docs));
     }
   } catch (err) {
+    
     console.log("===err===", err);
   }
 }
