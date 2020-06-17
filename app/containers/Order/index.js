@@ -35,13 +35,16 @@ import {
   makeSelectTotalItems,
   makeSelectSyncDataSucceed,
   makeSelectdataStore,
-  makeSelectStatusGetStore
+  makeSelectStatusGetStore,
+  makeSelectExportCsvStatus,
+  makeSelectDataExport
 } from './selectors';
 import {
   uploadCsvFileAction,
   syncDataAction,
   getOrders as getOrdersAction,
   getStore as getStoreAction,
+  exportCsv as exportCsvAction
 } from './actions';
 
 // reactstrap components
@@ -114,7 +117,10 @@ const Order = props => {
     syncDataSucceed,
     dataStores,
     getStore,
-    getStoreStatus
+    getStoreStatus,
+    exportCsv,
+    exportCsvStatus,
+    dataExport
   } = props;
   useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
@@ -130,7 +136,7 @@ const Order = props => {
   const [stateTimeRange, setStateTimeRange] = React.useState([
     {
       startDate: subMonths(new Date(), 1),
-      endDate: addDays(new Date(), 7),
+      endDate: addDays(new Date(), 1),
       key: 'selection'
     }
   ]);
@@ -149,9 +155,9 @@ const Order = props => {
   }, [syncDataSucceed, getStoreStatus]);
 
   const renderTable = () => {
-    return listOrders.map(order => {
+    return listOrders.map((order, key) => {
       return (
-        <tr>
+        <tr key={key}>
           <th scope="row">
             <a
               href="#pablo"
@@ -208,10 +214,10 @@ const Order = props => {
   const makeFilter = () => {
     const storesSelected = [];
     const statusOrderSelected = [];
-    if(selectedStore) selectedStore.map(s =>{
+    if (selectedStore) selectedStore.map(s => {
       storesSelected.push(s.label);
     });
-    if(selectedStatus) selectedStatus.map(o => {
+    if (selectedStatus) selectedStatus.map(o => {
       statusOrderSelected.push(o.value)
     });
     const filter = [
@@ -343,7 +349,7 @@ const Order = props => {
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText></InputGroupText>
                       </InputGroupAddon>
-                      <Input placeholder="Filter by Email, Phone ..." onChange={e => setSelectedEmail(e.target.value)} value={selectedEmail}/>
+                      <Input placeholder="Filter by Email, Phone ..." onChange={e => setSelectedEmail(e.target.value)} value={selectedEmail} />
                     </InputGroup>
                     <br />
                     <div>
@@ -413,7 +419,13 @@ const Order = props => {
                     nextPageRenderer={() => <i className="fa fa-angle-right" />}
                   />
                 </nav>
-                <SpeedDial uploadCsv={uploadCsv} syncData={syncData} syncStatus={syncStatus} />
+                <SpeedDial
+                  uploadCsv={uploadCsv}
+                  syncData={syncData}
+                  syncStatus={syncStatus}
+                  exportCsv={exportCsv}
+                  exportCsvStatus={exportCsvStatus}
+                />
               </CardFooter>
             </Card>
           </div>
@@ -432,6 +444,8 @@ const mapStateToProps = createStructuredSelector({
   syncDataSucceed: makeSelectSyncDataSucceed(),
   dataStores: makeSelectdataStore(),
   getStoreStatus: makeSelectStatusGetStore(),
+  exportCsvStatus: makeSelectExportCsvStatus(),
+  dataExport: makeSelectDataExport()
 });
 
 export const mapDispatchToProps = dispatch => ({
@@ -439,7 +453,8 @@ export const mapDispatchToProps = dispatch => ({
   uploadCsv: data => dispatch(uploadCsvFileAction(data)),
   syncData: () => dispatch(syncDataAction()),
   getOrders: (page, limit, filter) => dispatch(getOrdersAction(page, limit, filter)),
-  getStore: () => dispatch(getStoreAction())
+  getStore: () => dispatch(getStoreAction()),
+  exportCsv: filter => dispatch(exportCsvAction(filter))
 });
 
 const withConnect = connect(

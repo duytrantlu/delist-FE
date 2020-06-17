@@ -8,7 +8,8 @@ import {
   UPLOAD_CSV,
   SYCN_DATA_STORE,
   GET_ORDERS,
-  GET_STORE
+  GET_STORE,
+  EXPORT_CSV
 } from './constants';
 import {
   uploadCsvSucceed,
@@ -17,7 +18,9 @@ import {
   getOrdersSucceed,
   getOrdersFailed,
   getStoreSucceed,
-  getStoreFailed
+  getStoreFailed,
+  exportCsvSucceed,
+  exportCsvFailed
 } from './actions';
 
 export function* handleError(error) {
@@ -33,18 +36,10 @@ export function* uploadCsvActionHandler(data) {
   yield put(uploadCsvSucceed());
 }
 
-export function* getOrderActionHandler(data){
-  try{
+export function* getOrderActionHandler(data) {
+  try {
     const response = yield call(service.orderServices.getOrders, data.options);
-    console.log("===response===", response);
-    if(response.status === 200 && response.data.docs.length > 0){
-      // const stores = yield call(service.storeServices.getStore);
-      // const storeApis = stores.data.docs;
-      
-      // response.data.docs.map(async st => {
-      //   const customer = await service.wooServices.getCustomerInfo(storeApis, st.customer_id, st.store);
-      //   console.log("====customer===", customer);
-      // })
+    if (response.status === 200 && response.data.docs.length > 0) {
       yield put(getOrdersSucceed({
         orders: response.data.docs,
         pages: response.data.pages,
@@ -57,7 +52,7 @@ export function* getOrderActionHandler(data){
         itemCount: response.data.total
       }));
     }
-  }catch (err) {
+  } catch (err) {
     console.log("===err get order===", err);
   }
 }
@@ -120,7 +115,6 @@ export function* syncDataActionHandler() {
         orders.push(orderContainStore);
       });
       const newList = _.flatten(orders);
-      console.log("===newlist===", newList);
       const rs = yield call(service.orderServices.syncData, { listOrder: newList });
       const maxPage = _.max(totalPage);
       if (maxPage > 1) {
@@ -138,16 +132,29 @@ export function* syncDataActionHandler() {
   }
 }
 
+function* exportCsvActionHandler(data) {
+  try {
+    const response = yield call(service.orderServices.getDataExport, data.options);
+    if (response.status === 200 && response.data.length > 0) {
+      yield put(exportCsvSucceed(response.data));
+    } else {
+      yield put(exportCsvSucceed([]));
+    }
+  } catch (err) {
+    console.log("===err get order===", err);
+  }
+}
+
 function* getStoreActionHandler() {
-   
-  try{
+
+  try {
     const response = yield call(service.storeServices.getStore);
-    if(response.status === 200 && response.data.docs.length > 0){
+    if (response.status === 200 && response.data.docs.length > 0) {
       yield put(getStoreSucceed(response.data.docs));
     } else {
       yield put(getStoreSucceed(response.data));
     }
-  }catch (err) {
+  } catch (err) {
     console.log("===err get order===", err);
   }
 }
@@ -165,7 +172,11 @@ export function* getOrderHandlerWatcher() {
 }
 
 export function* getStoreHandlerWatcher() {
-  yield takeLatest(GET_ORDERS, getStoreActionHandler);
+  yield takeLatest(GET_STORE, getStoreActionHandler);
+}
+
+export function* exportCsvHandlerWatcher() {
+  yield takeLatest(EXPORT_CSV, exportCsvActionHandler);
 }
 
 export default function* watchSaga() {
@@ -174,5 +185,6 @@ export default function* watchSaga() {
     fork(syncDataStoreHandlerWatcher),
     fork(getOrderHandlerWatcher),
     fork(getStoreHandlerWatcher),
+    fork(exportCsvHandlerWatcher),
   ]);
 }

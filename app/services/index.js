@@ -14,7 +14,7 @@ import {
 } from './store-services';
 import { getListOrderFromWoo, getCustomerInfo } from './woo';
 
-import { syncData, getOrders } from './orderService';
+import { syncData, getOrders, getDataExport } from './orderService';
 const servicesExpress = {
   register: Signup,
   login: Signin,
@@ -37,6 +37,7 @@ const servicesExpress = {
   orderServices: {
     syncData,
     getOrders,
+    getDataExport,
   },
 };
 

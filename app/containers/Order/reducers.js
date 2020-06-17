@@ -13,7 +13,10 @@ import {
   GET_ORDERS_FAILED,
   GET_STORE,
   GET_STORE_SUCCEED,
-  GET_STORE_FAILED
+  GET_STORE_FAILED,
+  EXPORT_CSV,
+  EXPORT_CSV_SUCCEED,
+  EXPORT_CSV_FAILED
 } from './constants';
 
 export const initialState = {
@@ -27,11 +30,29 @@ export const initialState = {
   tableLoading: false,
   stores: [],
   getStoreStatus: false,
+  exportStatus: false,
+  exportData: [],
+  exportError: ''
 };
 
 const ordertContainerReducer = (state = initialState, action) =>
   produce(state, draft => {
     switch (action.type) {
+      case EXPORT_CSV:
+        draft.exportData = true;
+        draft.exportData = [];
+        draft.exportError = '';
+        break;
+      case EXPORT_CSV_SUCCEED:
+        draft.exportData = false;
+        draft.exportData = action.order;
+        draft.exportError = '';
+        break;
+      case EXPORT_CSV_FAILED:
+        draft.exportData = false;
+        draft.exportData = [];
+        draft.exportError = action.err;
+        break;
       case GET_ORDERS:
         draft.tableLoading = true;
         break;
