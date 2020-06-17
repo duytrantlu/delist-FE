@@ -99,6 +99,8 @@
     "react": "^16.13.1",
     "react-addons-css-transition-group": "^15.6.2",
     "react-chartjs-2": "^2.9.0",
+    "react-csv": "^2.0.3",
+    "react-csv-downloader": "^1.8.0",
     "react-date-range": "^1.0.3",
     "react-dom": "16.8.6",
     "react-dropzone": "^11.0.1",

@@ -13,6 +13,7 @@ import {
   EXPORT_CSV,
   EXPORT_CSV_SUCCEED,
   EXPORT_CSV_FAILED,
+  EXPORT_CSV_DONE
 } from './constants';
 
 export const uploadCsvFileAction = data => ({
@@ -34,6 +35,10 @@ export const exportCsvFailed = err => ({
   type: EXPORT_CSV_FAILED,
   err,
 });
+
+export const exportCsvDone = () => ({
+  type: EXPORT_CSV_DONE
+})
 
 export const uploadCsvSucceed = () => ({
   type: UPLOAD_CSV_SUCCEED,

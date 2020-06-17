@@ -14,3 +14,4 @@ export const GET_STORE_FAILED = 'containers/Order/GET_STORE_FAILED';
 export const EXPORT_CSV = 'containers/Order/EXPORT_CSV';
 export const EXPORT_CSV_SUCCEED = 'containers/Order/EXPORT_CSV_SUCCEED';
 export const EXPORT_CSV_FAILED = 'containers/Order/EXPORT_CSV_FAILED';
+export const EXPORT_CSV_DONE = 'containers/Order/EXPORT_CSV_DONE';

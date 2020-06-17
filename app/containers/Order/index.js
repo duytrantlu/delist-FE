@@ -19,6 +19,10 @@ import { addDays, subMonths } from 'date-fns';
 import IconButton from "@material-ui/core/IconButton";
 import { Button } from '@material-ui/core';
 import SearchIcon from "@material-ui/icons/Search";
+import { CSVLink } from "react-csv";
+import { CSVDownload } from "react-csv";
+
+
 
 import DataPicker from 'components/Calendar';
 
@@ -44,7 +48,8 @@ import {
   syncDataAction,
   getOrders as getOrdersAction,
   getStore as getStoreAction,
-  exportCsv as exportCsvAction
+  exportCsv as exportCsvAction,
+  exportCsvDone as exportCsvDoneAction
 } from './actions';
 
 // reactstrap components
@@ -120,7 +125,8 @@ const Order = props => {
     getStoreStatus,
     exportCsv,
     exportCsvStatus,
-    dataExport
+    dataExport,
+    exportCsvDone
   } = props;
   useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
@@ -140,10 +146,17 @@ const Order = props => {
       key: 'selection'
     }
   ]);
+  const csvLinkClick = React.useRef();
   useEffect(() => {
     getOrders(1, 10);
     getStore();
   }, []);
+
+  useEffect(() => {
+    if (exportCsvStatus) {
+      exportCsvDone();
+    }
+  }, [exportCsvStatus]);
 
   useEffect(() => {
     if (syncDataSucceed) {
@@ -248,7 +261,6 @@ const Order = props => {
   const handleFilter = e => {
     e.preventDefault();
     const filter = makeFilter();
-    console.log("==filter=", filter);
     getOrders(1, 10, filter);
   }
   const classes = useStyles();
@@ -290,7 +302,7 @@ const Order = props => {
     { label: "Completed date", value: 'date_completed' },
     { label: "Exported date", value: 'date_exported' },
     { label: "Shipped date", value: 'data_shipped' }
-  ]
+  ];
   return (
     <>
       <Header />
@@ -430,6 +442,7 @@ const Order = props => {
             </Card>
           </div>
         </Row>
+        {exportCsvStatus && dataExport.length > 0 &&<CSVDownload data={dataExport} target="_blank" />}
       </Container>
     </>
   );
@@ -454,7 +467,8 @@ export const mapDispatchToProps = dispatch => ({
   syncData: () => dispatch(syncDataAction()),
   getOrders: (page, limit, filter) => dispatch(getOrdersAction(page, limit, filter)),
   getStore: () => dispatch(getStoreAction()),
-  exportCsv: filter => dispatch(exportCsvAction(filter))
+  exportCsv: filter => dispatch(exportCsvAction(filter)),
+  exportCsvDone: () => dispatch(exportCsvDoneAction()),
 });
 
 const withConnect = connect(
