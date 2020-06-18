@@ -10,7 +10,7 @@ function MyDropzone(props) {
         header: true,
         transformHeader:function(h) {
           const newH = h.replace(/[^A-Z0-9]+/ig, '_');
-          return newH.replace(/_$/g, '').trim();
+          return newH.replace(/_$/g, '').toLowerCase().trim();
         },
         complete: function(result){
           console.log("====result==", result);

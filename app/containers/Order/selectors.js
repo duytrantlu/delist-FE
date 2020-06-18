@@ -67,6 +67,12 @@ const makeSelectExportCsvStatus = () =>
     substate => substate.exportStatus,
   );
 
+const makeSelectGetExportDataStatus = () =>
+  createSelector(
+    selectOrder,
+    substate => substate.getDataExportSucceed,
+  );
+
 const makeSelectDataExport = () =>
   createSelector(
     selectOrder,
@@ -85,4 +91,5 @@ export {
   makeSelectStatusGetStore,
   makeSelectExportCsvStatus,
   makeSelectDataExport,
+  makeSelectGetExportDataStatus
 };

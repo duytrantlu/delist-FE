@@ -13,7 +13,9 @@ import {
   EXPORT_CSV,
   EXPORT_CSV_SUCCEED,
   EXPORT_CSV_FAILED,
-  EXPORT_CSV_DONE
+  PERFORM_EXPORT_CSV,
+  PERFORM_EXPORT_CSV_SCUCCEED,
+  PERFORM_EXPORT_CSV_FAILED
 } from './constants';
 
 export const uploadCsvFileAction = data => ({
@@ -26,18 +28,24 @@ export const exportCsv = filter => ({
   options: { filter },
 });
 
-export const exportCsvSucceed = order => ({
+export const exportCsvSucceed = order => {
+  console.log("===order===",order)
+  return{
   type: EXPORT_CSV_SUCCEED,
   order,
-});
+}};
 
 export const exportCsvFailed = err => ({
   type: EXPORT_CSV_FAILED,
   err,
 });
 
-export const exportCsvDone = () => ({
-  type: EXPORT_CSV_DONE
+export const performExportCsv = () => ({
+  type: PERFORM_EXPORT_CSV
+});
+
+export const performExportCsvScucceed = () =>({
+  type: PERFORM_EXPORT_CSV_SCUCCEED
 })
 
 export const uploadCsvSucceed = () => ({

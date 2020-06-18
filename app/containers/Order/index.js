@@ -8,7 +8,7 @@ import { useInjectReducer } from 'utils/injectReducer';
 import { useInjectSaga } from 'utils/injectSaga';
 import { createStructuredSelector } from 'reselect';
 import { InputGroup, InputGroupAddon, InputGroupText, Input } from 'reactstrap';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
@@ -19,8 +19,7 @@ import { addDays, subMonths } from 'date-fns';
 import IconButton from "@material-ui/core/IconButton";
 import { Button } from '@material-ui/core';
 import SearchIcon from "@material-ui/icons/Search";
-import { CSVLink } from "react-csv";
-import { CSVDownload } from "react-csv";
+import { CSVDownload, CSVLink } from "react-csv";
 
 
 
@@ -41,7 +40,8 @@ import {
   makeSelectdataStore,
   makeSelectStatusGetStore,
   makeSelectExportCsvStatus,
-  makeSelectDataExport
+  makeSelectDataExport,
+  makeSelectGetExportDataStatus
 } from './selectors';
 import {
   uploadCsvFileAction,
@@ -49,7 +49,8 @@ import {
   getOrders as getOrdersAction,
   getStore as getStoreAction,
   exportCsv as exportCsvAction,
-  exportCsvDone as exportCsvDoneAction
+  performExportCsv as performExportCsvAction,
+  performExportCsvScucceed as performExportCsvScucceedAction
 } from './actions';
 
 // reactstrap components
@@ -126,7 +127,9 @@ const Order = props => {
     exportCsv,
     exportCsvStatus,
     dataExport,
-    exportCsvDone
+    performExportCsv,
+    getDataExportStatus,
+    performExportCsvScucceed
   } = props;
   useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
@@ -153,8 +156,15 @@ const Order = props => {
   }, []);
 
   useEffect(() => {
+    if (getDataExportStatus && dataExport.length > 0) {
+      performExportCsv();
+    }
+  }, [dataExport, getDataExportStatus]);
+
+  useEffect(() => {
     if (exportCsvStatus) {
-      exportCsvDone();
+      csvLinkClick.current.link.click();
+      performExportCsvScucceed();
     }
   }, [exportCsvStatus]);
 
@@ -442,7 +452,13 @@ const Order = props => {
             </Card>
           </div>
         </Row>
-        {exportCsvStatus && dataExport.length > 0 &&<CSVDownload data={dataExport} target="_blank" />}
+        <CSVLink
+          data={dataExport}
+          filename={`delist_fullfill_${new Date().getTime()}.csv`}
+          className="btn btn-primary"
+          target="_blank"
+          ref={csvLinkClick}
+        />
       </Container>
     </>
   );
@@ -458,7 +474,8 @@ const mapStateToProps = createStructuredSelector({
   dataStores: makeSelectdataStore(),
   getStoreStatus: makeSelectStatusGetStore(),
   exportCsvStatus: makeSelectExportCsvStatus(),
-  dataExport: makeSelectDataExport()
+  dataExport: makeSelectDataExport(),
+  getDataExportStatus: makeSelectGetExportDataStatus()
 });
 
 export const mapDispatchToProps = dispatch => ({
@@ -468,7 +485,8 @@ export const mapDispatchToProps = dispatch => ({
   getOrders: (page, limit, filter) => dispatch(getOrdersAction(page, limit, filter)),
   getStore: () => dispatch(getStoreAction()),
   exportCsv: filter => dispatch(exportCsvAction(filter)),
-  exportCsvDone: () => dispatch(exportCsvDoneAction()),
+  performExportCsv: () => dispatch(performExportCsvAction()),
+  performExportCsvScucceed: () => dispatch(performExportCsvScucceedAction()),
 });
 
 const withConnect = connect(

@@ -17,7 +17,9 @@ import {
   EXPORT_CSV,
   EXPORT_CSV_SUCCEED,
   EXPORT_CSV_FAILED,
-  EXPORT_CSV_DONE
+  PERFORM_EXPORT_CSV,
+  PERFORM_EXPORT_CSV_SCUCCEED,
+  PERFORM_EXPORT_CSV_FAILED
 } from './constants';
 
 export const initialState = {
@@ -33,29 +35,34 @@ export const initialState = {
   getStoreStatus: false,
   exportStatus: false,
   exportData: [],
-  exportError: ''
+  exportError: '',
+  getDataExportSucceed: false,
 };
 
 const ordertContainerReducer = (state = initialState, action) =>
   produce(state, draft => {
     switch (action.type) {
       case EXPORT_CSV:
-        draft.exportStatus = false;
+        draft.getDataExportSucceed = false;
         draft.exportData = [];
         draft.exportError = '';
         break;
       case EXPORT_CSV_SUCCEED:
-        draft.exportStatus = true;
+        draft.getDataExportSucceed = true;
         draft.exportData = action.order;
         draft.exportError = '';
         break;
-      case EXPORT_CSV_DONE:
+      case PERFORM_EXPORT_CSV:
+        draft.exportStatus = true;
+        draft.exportError = '';
+        break;
+      case PERFORM_EXPORT_CSV_SCUCCEED:
         draft.exportStatus = false;
         draft.exportData = [];
         draft.exportError = '';
         break;
       case EXPORT_CSV_FAILED:
-        draft.exportStatus = false;
+        draft.getDataExportSucceed = false;
         draft.exportData = [];
         draft.exportError = action.err;
         break;
