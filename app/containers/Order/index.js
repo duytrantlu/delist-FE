@@ -458,6 +458,7 @@ const Order = props => {
           className="btn btn-primary"
           target="_blank"
           ref={csvLinkClick}
+          style={{'display':'none'}}
         />
       </Container>
     </>
