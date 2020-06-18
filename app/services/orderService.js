@@ -1,6 +1,6 @@
 import Request from './axios';
 
-const baseUrl = '//localhost:3001';
+const baseUrl = process.env.SERVER_URL || '//localhost:3001';
 
 const syncData = async data => Request.put(`${baseUrl}/api/oms/sync`, data);
 

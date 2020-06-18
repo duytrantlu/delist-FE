@@ -1,6 +1,6 @@
 import Request from './axios';
 
-const baseUrl = '//localhost:3001';
+const baseUrl = process.env.SERVER_URL || '//localhost:3001';
 
 const getStore = async () => Request.get(`${baseUrl}/api/stores`);
 
