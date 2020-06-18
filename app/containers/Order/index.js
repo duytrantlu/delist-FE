@@ -275,9 +275,9 @@ const Order = props => {
   }
   const classes = useStyles();
 
-  const optionsStore = dataStores.map(st => {
+  const optionsStore = dataStores ? dataStores.map(st => {
     return { label: st.name, value: st._id }
-  })
+  }) : [];
 
   const optionsPayment = [
     { label: "Any", value: "" },
