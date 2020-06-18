@@ -11,21 +11,30 @@ import reducer from './reducers';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import EnhancedTable from 'components/storeManagement/EnhancedTable';
 import Header from 'components/Headers/Header';
+import Dialog from 'components/Dialog';
 import Column from './makeTable';
 
 import {
   makeSelectdataStore,
   makeSelectAddStoreSucceed,
   makeSelectRemoveStoreSucceed,
-  makeSelectEditStoreSucceed
+  makeSelectEditStoreSucceed,
+  makeSelectMsgErrors
 } from './selectors';
 import {
   getStore as getStoreAction,
   setAddStore as setAddStoreAction,
   removeStore as removeStoreAction,
   editStore as editStoreAction,
-
 } from './actions';
+
+import {
+  setHidePopup as setHidePopupAction
+} from 'containers/App/actions';
+
+import {
+  makeSelectCurrentErrorStatus
+} from 'containers/App/selectors';
 
 const key = 'storeManager';
 
@@ -38,7 +47,10 @@ const storeManager = props => {
     removeStore,
     removeStoreSucceed,
     editStore,
-    editStoreSucceed
+    editStoreSucceed,
+    globalErrorStatus,
+    setHidePopup,
+    msgErrors
   } = props;
   const columns = React.useMemo(
     () => Column,
@@ -97,6 +109,7 @@ const storeManager = props => {
           skipPageReset={skipPageReset}
         />
       </div>
+      <Dialog setHidePopup ={setHidePopup} msgErrors={msgErrors} globalErrorStatus={globalErrorStatus}/>
     </>
   )
 }
@@ -106,6 +119,8 @@ const mapStateToProps = createStructuredSelector({
   addStoreSucceed: makeSelectAddStoreSucceed(),
   removeStoreSucceed: makeSelectRemoveStoreSucceed(),
   editStoreSucceed: makeSelectEditStoreSucceed(),
+  globalErrorStatus: makeSelectCurrentErrorStatus(),
+  msgErrors: makeSelectMsgErrors(),
 });
 
 export const mapDispatchToProps = dispatch => ({
@@ -114,6 +129,7 @@ export const mapDispatchToProps = dispatch => ({
   setAddStore: data => dispatch(setAddStoreAction(data)),
   removeStore: data => dispatch(removeStoreAction(data)),
   editStore: data => dispatch(editStoreAction(data)),
+  setHidePopup: () => dispatch(setHidePopupAction())
 });
 
 const withConnect = connect(

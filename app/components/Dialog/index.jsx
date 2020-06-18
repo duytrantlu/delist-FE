@@ -50,26 +50,21 @@ const DialogActions = withStyles((theme) => ({
 }))(MuiDialogActions);
 
 export default function CustomizedDialogs(props) {
-  const {openModel} = props;
-  const [open, setOpen] = React.useState(false);
+  const {globalErrorStatus, msgErrors, setHidePopup } = props;
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
   const handleClose = () => {
-    setOpen(false);
+    setHidePopup();
   };
 
   return (
     <div>
-      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={globalErrorStatus}>
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          Modal title
+          OPPS!
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
-            in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+            {msgErrors}
           </Typography>
         </DialogContent>
         <DialogActions>

@@ -61,13 +61,14 @@ const Profile = props => {
     callChangePassword,
     msgErrors,
     changePassSuccess,
-    history
+    history,
+    
   } = props;
   useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
 
-  useMemo(()=>{
-    if(changePassSuccess){
+  useMemo(() => {
+    if (changePassSuccess) {
       history.push('/');
     }
   }, [changePassSuccess]);
@@ -87,9 +88,9 @@ const Profile = props => {
     validate(field, value);
     resetMsgErrors();
   }
-  const onClickCallChangePassword = e =>{
+  const onClickCallChangePassword = e => {
     e.preventDefault();
-    callChangePassword({user: {...user, password: newpassword}});
+    callChangePassword({ user: { ...user, password: newpassword } });
   }
 
   const validate = (field, value) => {
@@ -103,18 +104,18 @@ const Profile = props => {
         break;
     }
 
-    validation.formValid = true;
+    let valid = true;
     Object.keys(validation).forEach((key) => {
       if (typeof validation[key].valid === 'boolean' && !validation[key].valid) {
-        validation.formValid = false;
+        valid = false;
       }
     });
-    setValidation(validation.formValid);
+    setValidation(valid);
   }
 
   return (
     <>
-      <UserHeader user={user} changePassAction={startEditPwd} startEdit={startEdit}/>
+      <UserHeader user={user} changePassAction={startEditPwd} startEdit={startEdit} />
       {/* Page content */}
       <Container className="mt--7" fluid>
         <Row>
@@ -256,8 +257,8 @@ const Profile = props => {
                           />
                         </FormGroup>
                       </Col>
-                      <FormValidationErrors validation={validation}/>
-                      <FormSubmitErrors errors={msgErrors}/>
+                      <FormValidationErrors validation={validation} />
+                      <FormSubmitErrors errors={msgErrors} />
                     </Row>}
                   </div>
                   <hr className="my-4" />
@@ -272,7 +273,7 @@ const Profile = props => {
 }
 
 Profile.defaultProps = {
-  msgErrors:[]
+  msgErrors: []
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -280,8 +281,9 @@ const mapStateToProps = createStructuredSelector({
   validation: makeSelectValidation(),
   newpassword: makeSelectNewpwd(),
   renewpassword: makeSelectConfNewpwd(),
-  changePassSuccess:makeSelectChangeSucceed(),
+  changePassSuccess: makeSelectChangeSucceed(),
   msgErrors: makeSelectMsgError(),
+  
 });
 
 export const mapDispatchToProps = dispatch => ({
@@ -292,7 +294,8 @@ export const mapDispatchToProps = dispatch => ({
   onChanageConfNewPasswd: confNewpwd => dispatch(onChanageConfNewPasswdAction(confNewpwd)),
   resetMsgErrors: () => dispatch(resetMsgErrorsAction()),
   setValidation: status => dispatch(onChanageSetValidation(status)),
-  callChangePassword: data=>dispatch(changePasswordAction(data)),
+  callChangePassword: data => dispatch(changePasswordAction(data)),
+  
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

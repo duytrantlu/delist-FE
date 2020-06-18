@@ -31,9 +31,15 @@ const makeSelectEditStoreSucceed = () =>
     substate => substate.editStoreSucceed,
   );
 
+const makeSelectMsgErrors = () =>
+  createSelector(
+    selectStore,
+    substate => substate.msgErrors,
+  );
 export {
   makeSelectdataStore,
   makeSelectAddStoreSucceed,
   makeSelectRemoveStoreSucceed,
-  makeSelectEditStoreSucceed
+  makeSelectEditStoreSucceed,
+  makeSelectMsgErrors
 };

@@ -68,10 +68,12 @@ const userProfileContainerReducer = (state = initialState, action) =>
         break;
       case CHANGE_PASS_SUCCEED:
         draft.changePassSuccess = true;
+        draft.validation.formValid = false;
         draft.messageErrorChangePassd = [];
         break;
       case CHANGE_PASS_FAILED:
         draft.changePassSuccess = false;
+        draft.validation.formValid = false;
         draft.messageErrorChangePassd = getErrorMessage(action.err);
         break;
       case CHANGE_PASS_ACTION:

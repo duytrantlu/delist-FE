@@ -9,6 +9,7 @@ import { useInjectSaga } from 'utils/injectSaga';
 import { createStructuredSelector } from 'reselect';
 import { InputGroup, InputGroupAddon, InputGroupText, Input } from 'reactstrap';
 import { makeStyles } from '@material-ui/core/styles';
+import Dialog from 'components/Dialog';
 
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
@@ -41,7 +42,8 @@ import {
   makeSelectStatusGetStore,
   makeSelectExportCsvStatus,
   makeSelectDataExport,
-  makeSelectGetExportDataStatus
+  makeSelectGetExportDataStatus,
+  makeSelectMsgErrors
 } from './selectors';
 import {
   uploadCsvFileAction,
@@ -52,6 +54,14 @@ import {
   performExportCsv as performExportCsvAction,
   performExportCsvScucceed as performExportCsvScucceedAction
 } from './actions';
+
+import {
+  setHidePopup as setHidePopupAction
+} from 'containers/App/actions';
+
+import {
+  makeSelectCurrentErrorStatus
+} from 'containers/App/selectors';
 
 // reactstrap components
 import {
@@ -129,7 +139,10 @@ const Order = props => {
     dataExport,
     performExportCsv,
     getDataExportStatus,
-    performExportCsvScucceed
+    performExportCsvScucceed,
+    globalErrorStatus,
+    setHidePopup,
+    msgErrors
   } = props;
   useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
@@ -274,7 +287,7 @@ const Order = props => {
     getOrders(1, 10, filter);
   }
   const classes = useStyles();
-  console.log("dataStores====", dataStores);
+  
   const optionsStore = dataStores ? dataStores.map(st => {
     return { label: st.name, value: st._id }
   }) : [];
@@ -461,6 +474,7 @@ const Order = props => {
           style={{'display':'none'}}
         />
       </Container>
+      <Dialog setHidePopup ={setHidePopup} msgErrors={msgErrors} globalErrorStatus={globalErrorStatus}/>
     </>
   );
 }
@@ -476,7 +490,9 @@ const mapStateToProps = createStructuredSelector({
   getStoreStatus: makeSelectStatusGetStore(),
   exportCsvStatus: makeSelectExportCsvStatus(),
   dataExport: makeSelectDataExport(),
-  getDataExportStatus: makeSelectGetExportDataStatus()
+  getDataExportStatus: makeSelectGetExportDataStatus(),
+  globalErrorStatus: makeSelectCurrentErrorStatus(),
+  msgErrors: makeSelectMsgErrors(),
 });
 
 export const mapDispatchToProps = dispatch => ({
@@ -488,6 +504,7 @@ export const mapDispatchToProps = dispatch => ({
   exportCsv: filter => dispatch(exportCsvAction(filter)),
   performExportCsv: () => dispatch(performExportCsvAction()),
   performExportCsvScucceed: () => dispatch(performExportCsvScucceedAction()),
+  setHidePopup: () => dispatch(setHidePopupAction())
 });
 
 const withConnect = connect(

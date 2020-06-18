@@ -13,6 +13,7 @@ import {
 } from './constants';
 import {
   uploadCsvSucceed,
+  uploadCsvFailed,
   syncDataSucceed,
   syncDataFailed,
   getOrdersSucceed,
@@ -22,6 +23,9 @@ import {
   exportCsvSucceed,
   exportCsvFailed
 } from './actions';
+import {
+  setShowPopup
+} from 'containers/App/actions';
 
 export function* handleError(error) {
   yield call(handleGenericError, error);
@@ -39,21 +43,19 @@ export function* uploadCsvActionHandler(data) {
 export function* getOrderActionHandler(data) {
   try {
     const response = yield call(service.orderServices.getOrders, data.options);
-    if (response.status === 200 && response.data.docs.length > 0) {
+    if (response.status === 200 && response.data.docs) {
       yield put(getOrdersSucceed({
         orders: response.data.docs,
         pages: response.data.pages,
         itemCount: response.data.total
       }));
     } else {
-      yield put(getOrdersSucceed({
-        orders: response.data.docs,
-        pages: response.data.pages,
-        itemCount: response.data.total
-      }));
+      yield put(getOrdersFailed(new Error("Some wrong occurred when get Orders.")));
+      yield put(setShowPopup());
     }
   } catch (err) {
-    console.log("===err get order===", err);
+    yield put(getOrdersFailed(err));
+    yield put(setShowPopup());
   }
 }
 
@@ -95,7 +97,8 @@ function* requestStoreWoo(docs, maxPage) {
     }
     yield put(syncDataSucceed())
   } catch (err) {
-    yield put(syncDataFailed(rs.data.err))
+    yield put(syncDataFailed(new Error("Synchronize orders failed.")));
+    yield put(setShowPopup());
   }
 }
 
@@ -123,25 +126,29 @@ export function* syncDataActionHandler() {
         if (rs.data.success) {
           yield put(syncDataSucceed())
         } else {
-          yield put(syncDataFailed(rs.data.err))
+          yield put(syncDataFailed(new Error("Synchronize orders failed.")));
+          yield put(setShowPopup());
         }
       }
     }
   } catch (err) {
-    yield put(syncDataFailed(err))
+    yield put(syncDataFailed(err));
+    yield put(setShowPopup());
   }
 }
 
 function* exportCsvActionHandler(data) {
   try {
     const response = yield call(service.orderServices.getDataExport, data.options);
-    if (response.status === 200 && response.data.length > 0) {
+    if (response.status === 200 && response.data) {
       yield put(exportCsvSucceed(response.data));
     } else {
-      yield put(exportCsvSucceed([]));
+      yield put(exportCsvFailed(new Error("Export csv file failed.")));
+      yield put(setShowPopup());
     }
   } catch (err) {
-    console.log("===err get order===", err);
+    yield put(exportCsvFailed(err));
+    yield put(setShowPopup());
   }
 }
 
@@ -149,13 +156,15 @@ function* getStoreActionHandler() {
 
   try {
     const response = yield call(service.storeServices.getStore);
-    if (response.status === 200 && response.data.docs.length > 0) {
+    if (response.status === 200 && response.data.docs) {
       yield put(getStoreSucceed(response.data.docs));
     } else {
-      yield put(getStoreSucceed(response.data.docs));
+      yield put(getStoreFailed(new Error("Get Store failed.")));
+      yield put(setShowPopup());
     }
   } catch (err) {
-    console.log("===err get order===", err);
+    yield put(getStoreFailed(err));
+    yield put(setShowPopup());
   }
 }
 

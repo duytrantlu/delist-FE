@@ -11,13 +11,15 @@ import reducer from './reducers';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import EnhancedTable from 'components/userManagement/EnhancedTable';
 import Header from 'components/Headers/Header';
+import Dialog from 'components/Dialog';
 import Auth from 'utils/Auth';
 
 import {
   makeSelectUsers,
   makeSelectAddUserSucceed,
   makeSelectDelUserSucceed,
-  makeSelectEditUserSucceed
+  makeSelectEditUserSucceed,
+  makeSelectMsgError
 } from './selectors';
 import {
   getUsers as getUsersAction,
@@ -25,6 +27,14 @@ import {
   adminDelUserAction,
   editRoleUser as editRoleUserAction
 } from './actions';
+
+import {
+  setHidePopup as setHidePopupAction
+} from 'containers/App/actions';
+
+import {
+  makeSelectCurrentErrorStatus
+} from 'containers/App/selectors';
 
 const key = 'userManagement';
 
@@ -37,7 +47,10 @@ const userManager = props => {
     delUser,
     delUserSucceed,
     editRole,
-    editRoleSucceed
+    editRoleSucceed,
+    globalErrorStatus,
+    setHidePopup,
+    msgErrors
   } = props;
   const user = Auth.getUser();
   const columns = React.useMemo(
@@ -100,6 +113,7 @@ const userManager = props => {
           skipPageReset={skipPageReset}
         />
       </div>
+      <Dialog setHidePopup ={setHidePopup} msgErrors={msgErrors} globalErrorStatus={globalErrorStatus}/>
     </>
   )
 }
@@ -109,6 +123,8 @@ const mapStateToProps = createStructuredSelector({
   addUserSucceed: makeSelectAddUserSucceed(),
   delUserSucceed: makeSelectDelUserSucceed(),
   editRoleSucceed: makeSelectEditUserSucceed(),
+  globalErrorStatus: makeSelectCurrentErrorStatus(),
+  msgErrors: makeSelectMsgError()
 });
 
 export const mapDispatchToProps = dispatch => ({
@@ -116,8 +132,8 @@ export const mapDispatchToProps = dispatch => ({
   getData: () => dispatch(getUsersAction()),
   setAddUser: data => dispatch(setDataAddUserAction(data)),
   delUser: data => dispatch(adminDelUserAction(data)),
-  editRole: data => dispatch(editRoleUserAction(data))
-
+  editRole: data => dispatch(editRoleUserAction(data)),
+  setHidePopup: () => dispatch(setHidePopupAction())
 });
 
 const withConnect = connect(

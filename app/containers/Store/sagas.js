@@ -11,12 +11,18 @@ import {
 } from './constants';
 import {
   setAddStoreSucceed,
+  setAddStoreFailed,
   getStoreSucceed,
+  getStoreFailed,
   removeStoreSucceed,
   removeStoreFailed,
   editStoreSucceed,
   editStoreFailed
 } from './actions';
+
+import {
+  setShowPopup
+} from 'containers/App/actions';
 
 export function* handleError(error) {
   yield call(handleGenericError, error);
@@ -25,24 +31,31 @@ export function* handleError(error) {
 export function* addStoreActionHandler(data) {
   try {
     const response = yield call(service.storeServices.createStore, data.data);
-    yield put(setAddStoreSucceed())
+    if (response.status === 200 && response.data.success === true) {
+      yield put(setAddStoreSucceed());
+    } else {
+      yield put(setAddStoreFailed(new Error("Add store failed.")));
+      yield put(setShowPopup());
+    }
 
   } catch (err) {
-    console.log("===err===", err);
+    yield put(setAddStoreFailed(err));
+    yield put(setShowPopup());
   }
 }
 
 export function* getStoresActionHandler() {
   try {
     const response = yield call(service.storeServices.getStore);
-    if (response.status === 200 && response.data.docs.length) {
+    if (response.status === 200 && response.data.docs) {
       yield put(getStoreSucceed(response.data.docs));
     } else {
-      yield put(getStoreSucceed(response.data.docs));
+      yield put(getStoreFailed(new Error("Some wrong occurred when get Stores.")));
+      yield put(setShowPopup());
     }
   } catch (err) {
-    
-    console.log("===err===", err);
+    yield put(getStoreFailed(err));
+    yield put(setShowPopup());
   }
 }
 
@@ -50,12 +63,14 @@ export function* removeStoreActionHandler(data) {
   try {
     const response = yield call(service.storeServices.removeStore, data.ids);
     if (response.status === 200 && response.data.success === true) {
-      yield put(removeStoreSucceed())
+      yield put(removeStoreSucceed());
     } else {
-      console.log("===response= removeStoreActionHandlerremoveStoreActionHandler==", response);
+      yield put(removeStoreFailed(new Error("Remove store failed.")));
+      yield put(setShowPopup());
     }
   } catch (err) {
-    console.log("===err===", err);
+    yield put(removeStoreFailed(err));
+    yield put(setShowPopup());
   }
 }
 
@@ -65,10 +80,12 @@ export function* editStoreActionHandler(data) {
     if (response.status === 200 && response.data.success === true) {
       yield put(editStoreSucceed())
     } else {
-      console.log("===response= editStoreActionHandler==", response);
+      yield put(editStoreFailed(new Error("Edit store failed.")));
+      yield put(setShowPopup());
     }
   } catch (err) {
-    console.log("===err===", err);
+    yield put(editStoreFailed(err));
+      yield put(setShowPopup());
   }
 }
 

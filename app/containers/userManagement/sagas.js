@@ -19,6 +19,9 @@ import {
   editRoleUserSucceed,
   editRoleUserFailed
 } from './actions';
+import {
+  setShowPopup
+} from 'containers/App/actions';
 
 export function* handleError(error) {
   yield call(handleGenericError, error);
@@ -30,26 +33,27 @@ export function* editRoleUsersActionHandler(data) {
     if (response.status === 200 && response.data.success === true) {
       yield put(editRoleUserSucceed());
     } else {
-      // yield put(editRoleUserFailed());
-      console.log('===response==', response);
+      yield put(editRoleUserFailed(new Error("Edit role User Failed.")));
+      yield put(setShowPopup());
     }
   } catch (err) {
-    yield call(handleError, err);
+    yield put(editRoleUserFailed(err));
+    yield put(setShowPopup());
   }
 }
 
 export function* delUserHandler(data) {
-  console.log('===data.ids==', data.ids);
   try {
     const response = yield call(service.userSevices.delUsers, data.ids);
     if (response.status === 200 && response.data.success === true) {
       yield put(adminDelUserSucceed());
     } else {
-      // yield put(adminDelUserFailed());
-      console.log('===response==', response);
+      yield put(adminDelUserFailed(new Error("Remove User Failed.")));
+      yield put(setShowPopup());
     }
   } catch (err) {
-    yield call(handleError, err);
+    yield put(adminDelUserFailed(err));
+    yield put(setShowPopup());
   }
 }
 
@@ -59,11 +63,12 @@ export function* addUserHandler(data) {
     if (response.status === 200 && response.data.success === true) {
       yield put(adminAddUserSucceed());
     } else {
-      // yield put(adminAddUserFailed());
-      console.log('===response==', response);
+      yield put(adminAddUserFailed(new Error("Add User Failed.")));
+      yield put(setShowPopup());
     }
   } catch (err) {
-    yield call(handleError, err);
+    yield put(adminAddUserFailed(err));
+    yield put(setShowPopup());
   }
 }
 
@@ -73,10 +78,12 @@ export function* getUsersActionHandler() {
     if (response.status === 200 && response.data.docs.length > 0) {
       yield put(getUsersSucceed(response.data.docs));
     } else {
-      yield put(getUsersFailed(response.data));
+      yield put(getUsersFailed(new Error("Some wrong occurred when get Users.")));
+      yield put(setShowPopup());
     }
   } catch (err) {
-    yield call(handleError, err);
+    yield put(getUsersFailed(err));
+    yield put(setShowPopup());
   }
 }
 

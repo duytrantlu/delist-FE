@@ -1,6 +1,6 @@
 import io from 'socket.io-client';
 
-const baseUrl = 'http//18.219.90.217:3001';
+const baseUrl = 'http://localhost:3001';
 
 // socket
 const socket = io(baseUrl);

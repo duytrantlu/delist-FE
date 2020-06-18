@@ -1,7 +1,6 @@
 /* eslint-disable */
 
 import { call, put, takeLatest, all, fork } from 'redux-saga/effects';
-import { push } from 'connected-react-router';
 import { handleGenericError } from 'utils/handleGenericError';
 import service from 'services';
 import {
@@ -16,14 +15,14 @@ export function* handleError(error) {
 
 export function* editpwdActionHandler(data) {
   try {
-    const response = yield call(service.userSevices.profileUser, data.data);
+    const response = yield call(service.userSevices.profileUserPassword, data.data);
     if (response.status === 200 && response.data.success === true) {
       yield put(changePasswordActionSucceed());
     } else {
-      yield put(changePasswordActionFailure(response.data));
+      yield put(changePasswordActionFailure(new Error("Change Password failed")));
     }
   } catch (err) {
-    yield call(handleError, err);
+    yield put(changePasswordActionFailure(err));
   }
 }
 

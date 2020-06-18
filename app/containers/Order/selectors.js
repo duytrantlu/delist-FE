@@ -79,6 +79,14 @@ const makeSelectDataExport = () =>
     substate => substate.exportData,
   );
 
+const makeSelectMsgErrors = () =>
+  createSelector(
+    selectOrder,
+    substate => substate.msgErrors,
+  );
+
+
+
 export {
   makeSelectLoading,
   makeSelectSyncStatus,
@@ -91,5 +99,6 @@ export {
   makeSelectStatusGetStore,
   makeSelectExportCsvStatus,
   makeSelectDataExport,
-  makeSelectGetExportDataStatus
+  makeSelectGetExportDataStatus,
+  makeSelectMsgErrors
 };

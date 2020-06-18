@@ -1,6 +1,7 @@
 import {
   UPLOAD_CSV,
   UPLOAD_CSV_SUCCEED,
+  UPLOAD_CSV_FAILED,
   SYCN_DATA_STORE,
   SYCN_DATA_STORE_SUCCEED,
   SYCN_DATA_STORE_FAILED,
@@ -28,12 +29,10 @@ export const exportCsv = filter => ({
   options: { filter },
 });
 
-export const exportCsvSucceed = order => {
-  console.log("===order===",order)
-  return{
+export const exportCsvSucceed = order => ({
   type: EXPORT_CSV_SUCCEED,
   order,
-}};
+});
 
 export const exportCsvFailed = err => ({
   type: EXPORT_CSV_FAILED,
@@ -46,10 +45,20 @@ export const performExportCsv = () => ({
 
 export const performExportCsvScucceed = () =>({
   type: PERFORM_EXPORT_CSV_SCUCCEED
+});
+
+export const performExportCsvFailed = err =>({
+  type: PERFORM_EXPORT_CSV_FAILED,
+  err
 })
 
 export const uploadCsvSucceed = () => ({
   type: UPLOAD_CSV_SUCCEED,
+});
+
+export const uploadCsvFailed = err => ({
+  type: UPLOAD_CSV_FAILED,
+  err
 });
 
 export const syncDataAction = () => ({
@@ -93,3 +102,4 @@ export const getStoreFailed = err => ({
   type: GET_STORE_FAILED,
   err,
 });
+

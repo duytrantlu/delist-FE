@@ -36,8 +36,9 @@ export const adminAddUserSucceed = () => ({
   type: ADD_USER_SUCCEED,
 });
 
-export const adminAddUserFailed = () => ({
+export const adminAddUserFailed = err => ({
   type: ADD_USER_FAILED,
+  err
 });
 
 export const adminDelUserAction = data => ({
@@ -49,8 +50,9 @@ export const adminDelUserSucceed = () => ({
   type: DEL_USER_SUCCEED,
 });
 
-export const adminDelUserFailed = () => ({
+export const adminDelUserFailed = err => ({
   type: DEL_USER_FAILED,
+  err
 });
 
 export const editRoleUser = user => ({
@@ -62,6 +64,7 @@ export const editRoleUserSucceed = () => ({
   type: EDIT_USER_SUCCEED,
 });
 
-export const editRoleUserFailed = () => ({
+export const editRoleUserFailed = err => ({
   type: EDIT_USER_FAILED,
+  err
 });

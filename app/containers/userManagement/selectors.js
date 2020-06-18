@@ -31,9 +31,16 @@ const makeSelectEditUserSucceed = () =>
     substate => substate.editUserSucceed,
   );
 
+  const makeSelectMsgError = () =>
+  createSelector(
+    selectRegister,
+    substate => substate.msgErrors,
+  );
+
 export {
   makeSelectUsers,
   makeSelectAddUserSucceed,
   makeSelectDelUserSucceed,
   makeSelectEditUserSucceed,
+  makeSelectMsgError
 };

@@ -5,6 +5,7 @@ import { LOCATION_CHANGE } from 'connected-react-router';
 import {
   UPLOAD_CSV,
   UPLOAD_CSV_SUCCEED,
+  UPLOAD_CSV_FAILED,
   SYCN_DATA_STORE,
   SYCN_DATA_STORE_SUCCEED,
   SYCN_DATA_STORE_FAILED,
@@ -25,7 +26,6 @@ import {
 export const initialState = {
   loading: false,
   syncStatus: false,
-  syncDataFailed: [],
   syncDataSucceed: false,
   listOrders: [],
   pages: 0,
@@ -37,6 +37,21 @@ export const initialState = {
   exportData: [],
   exportError: '',
   getDataExportSucceed: false,
+  msgErrors: [],
+};
+
+export const getErrorMessage = err => {
+  const errors = [];
+  if (err && err.message) {
+    errors.push(err.message); // Summary
+    const errObj = err.errors ? err.errors : {};
+    Object.keys(errObj).forEach(key => {
+      errors.push(errObj[key]);
+    });
+  } else {
+    errors.push(`${err.status} ${err.statusText}`);
+  }
+  return errors;
 };
 
 const ordertContainerReducer = (state = initialState, action) =>
@@ -64,7 +79,7 @@ const ordertContainerReducer = (state = initialState, action) =>
       case EXPORT_CSV_FAILED:
         draft.getDataExportSucceed = false;
         draft.exportData = [];
-        draft.exportError = action.err;
+        draft.msgErrors = getErrorMessage(action.err);
         break;
       case GET_ORDERS:
         draft.tableLoading = true;
@@ -79,8 +94,7 @@ const ordertContainerReducer = (state = initialState, action) =>
       case GET_ORDERS_FAILED:
         draft.tableLoading = false;
         draft.listOrders = [];
-        draft.pages = 0;
-        draft.totalItems = 0;
+        draft.msgErrors = getErrorMessage(action.err);
         break;
       case GET_STORE:
         draft.getStoreStatus = true;
@@ -92,6 +106,7 @@ const ordertContainerReducer = (state = initialState, action) =>
         break;
       case GET_STORE_FAILED:
         draft.stores = [];
+        draft.msgErrors = getErrorMessage(action.err);
         break;
       case UPLOAD_CSV:
         draft.loading = true;
@@ -101,20 +116,21 @@ const ordertContainerReducer = (state = initialState, action) =>
         break;
       case SYCN_DATA_STORE:
         draft.syncStatus = true;
-        draft.syncDataFailed = [];
+        draft.msgErrors = [];
         break;
       case SYCN_DATA_STORE_SUCCEED:
         draft.syncStatus = false;
         draft.syncDataSucceed = true;
-        draft.syncDataFailed = [];
+        draft.msgErrors = [];
         break;
       case SYCN_DATA_STORE_FAILED:
         draft.syncStatus = false;
-        draft.syncDataFailed = action.err;
+        draft.msgErrors = getErrorMessage(action.err);
         break;
       case LOCATION_CHANGE:
         draft.syncStatus = false;
-        draft.syncDataFailed = [];
+        draft.exportData = [];
+        draft.msgErrors = [];
         break;
     }
   });

@@ -24,6 +24,11 @@ export const getStoreSucceed = store => ({
   store,
 });
 
+export const getStoreFailed = err => ({
+  type: GET_STORE_FAILED,
+  err,
+});
+
 export const setAddStore = data => ({
   type: ADD_STORE,
   data,
@@ -31,6 +36,11 @@ export const setAddStore = data => ({
 
 export const setAddStoreSucceed = () => ({
   type: ADD_STORE_SUCCEED,
+});
+
+export const setAddStoreFailed = err => ({
+  type: ADD_STORE_FAILED,
+  err
 });
 
 export const removeStore = ids => ({
@@ -42,8 +52,9 @@ export const removeStoreSucceed = () => ({
   type: REMOVE_STORE_SUCCEED
 });
 
-export const removeStoreFailed = () => ({
+export const removeStoreFailed = err => ({
   type: REMOVE_STORE_FAILED,
+  err
 });
 
 export const editStore = newStore => ({
@@ -55,7 +66,8 @@ export const editStoreSucceed = () => ({
   type: EDIT_STORE_SUCCEED,
 });
 
-export const editStoreFailed = () => ({
+export const editStoreFailed = err => ({
   type: EDIT_STORE_FAILED,
+  err
 });
 

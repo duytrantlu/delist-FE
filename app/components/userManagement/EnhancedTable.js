@@ -238,7 +238,7 @@ const EnhancedTable = ({
           {page.map((row, i) => {
             prepareRow(row);
             return (
-              <TableRow {...row.getRowProps()}>
+              <TableRow {...row.getRowProps()} key={i}>
                 {row.cells.map(cell => (
                   <TableCell {...cell.getCellProps()}>
                     {cell.render('Cell')}
@@ -252,6 +252,7 @@ const EnhancedTable = ({
         <TableFooter>
           <TableRow>
             <TablePagination
+              key={data.id}
               rowsPerPageOptions={[
                 5,
                 10,
