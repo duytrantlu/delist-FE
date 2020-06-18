@@ -152,7 +152,7 @@ function* getStoreActionHandler() {
     if (response.status === 200 && response.data.docs.length > 0) {
       yield put(getStoreSucceed(response.data.docs));
     } else {
-      yield put(getStoreSucceed(response.data));
+      yield put(getStoreSucceed(response.data.docs));
     }
   } catch (err) {
     console.log("===err get order===", err);

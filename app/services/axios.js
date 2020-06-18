@@ -3,6 +3,8 @@ import axios from 'axios';
 import Auth from 'utils/Auth';
 (function() {
   const token = Auth.getToken();
+  
+  axios.defaults.baseURL = 'http://18.219.90.217:3001';
   if (token) {
     axios.defaults.headers.common = { Authorization: `bearer ${token}` };
   } else {
