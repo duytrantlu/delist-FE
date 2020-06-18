@@ -124,7 +124,7 @@ module.exports = options => ({
     // drop any unreachable code.
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'development',
-      SERVER_URL: 'http://localhost:3001',
+      SERVER_URL: 'http://18.219.90.217:3001',
     }),
   ]),
   resolve: {
