@@ -1,5 +1,3 @@
-import Signup from './registerService';
-import Signin from './loginService';
 import {
   profileUserPassword,
   getUsers,
@@ -15,9 +13,8 @@ import {
 import { getListOrderFromWoo, getCustomerInfo } from './woo';
 
 import { syncData, getOrders, getDataExport } from './orderService';
+
 const servicesExpress = {
-  register: Signup,
-  login: Signin,
   userSevices: {
     profileUserPassword,
     getUsers,

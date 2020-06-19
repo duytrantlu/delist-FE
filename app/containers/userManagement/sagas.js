@@ -3,6 +3,7 @@
 import { call, put, takeLatest, all, fork } from 'redux-saga/effects';
 import { handleGenericError } from 'utils/handleGenericError';
 import service from 'services';
+import register from 'authServices/registerService';
 import {
   GET_USERS,
   SET_DATA_ADD_USER,
@@ -59,7 +60,7 @@ export function* delUserHandler(data) {
 
 export function* addUserHandler(data) {
   try {
-    const response = yield call(service.register, data.data);
+    const response = yield call(register, data.data);
     if (response.status === 200 && response.data.success === true) {
       yield put(adminAddUserSucceed());
     } else {
