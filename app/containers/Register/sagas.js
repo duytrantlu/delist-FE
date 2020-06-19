@@ -1,6 +1,6 @@
 import { call, put, takeLatest, all, fork } from 'redux-saga/effects';
 import { handleGenericError } from 'utils/handleGenericError';
-import service from 'services';
+import register from 'authServices/registerService';
 import { REGISTER_ACTION } from './constants';
 import { registerActionSucceed, registerActionFailure } from './actions';
 
@@ -10,7 +10,7 @@ export function* handleError(error) {
 
 export function* registerActionHandler(data) {
   try {
-    const response = yield call(service.register, data.data);
+    const response = yield call(register, data.data);
     if (response.status === 200 && response.data.success === true) {
       yield put(registerActionSucceed());
     } else {

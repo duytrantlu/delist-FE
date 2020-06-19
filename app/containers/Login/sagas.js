@@ -1,6 +1,6 @@
 import { call, put, takeLatest, all, fork } from 'redux-saga/effects';
 import { handleGenericError } from 'utils/handleGenericError';
-import service from 'services';
+import login from 'authServices/loginService';
 import Auth from 'utils/Auth';
 import { LOGIN_ACTION } from './constants';
 import { loginActionSucceed, loginActionFailure } from './actions';
@@ -17,7 +17,7 @@ export function* loginActionHandler(data) {
       username,
       password,
     };
-    const response = yield call(service.login, body);
+    const response = yield call(login, body);
     if (response.status === 200 && response.data.success === true) {
       Auth.authenticateUser(response.data.token, response.data.user);
       yield put(loginActionSucceed());
