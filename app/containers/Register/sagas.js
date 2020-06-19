@@ -1,6 +1,6 @@
 import { call, put, takeLatest, all, fork } from 'redux-saga/effects';
 import { handleGenericError } from 'utils/handleGenericError';
-import register from 'authServices/registerService';
+import register from 'services/registerService';
 import { REGISTER_ACTION } from './constants';
 import { registerActionSucceed, registerActionFailure } from './actions';
 

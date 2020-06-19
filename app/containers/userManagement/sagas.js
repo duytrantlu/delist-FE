@@ -3,7 +3,7 @@
 import { call, put, takeLatest, all, fork } from 'redux-saga/effects';
 import { handleGenericError } from 'utils/handleGenericError';
 import service from 'services';
-import register from 'authServices/registerService';
+import register from 'services/registerService';
 import {
   GET_USERS,
   SET_DATA_ADD_USER,

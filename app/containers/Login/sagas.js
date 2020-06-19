@@ -1,6 +1,6 @@
 import { call, put, takeLatest, all, fork } from 'redux-saga/effects';
 import { handleGenericError } from 'utils/handleGenericError';
-import login from 'authServices/loginService';
+import login from 'services/loginService';
 import Auth from 'utils/Auth';
 import { LOGIN_ACTION } from './constants';
 import { loginActionSucceed, loginActionFailure } from './actions';
