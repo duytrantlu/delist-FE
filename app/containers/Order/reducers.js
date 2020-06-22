@@ -19,8 +19,9 @@ import {
   EXPORT_CSV_SUCCEED,
   EXPORT_CSV_FAILED,
   PERFORM_EXPORT_CSV,
-  PERFORM_EXPORT_CSV_SCUCCEED,
-  PERFORM_EXPORT_CSV_FAILED
+  PERFORM_EXPORT_CSV_SUCCEED,
+  PERFORM_EXPORT_CSV_FAILED,
+  IMPORT_FILE_EXCEPTION_CANCEL
 } from './constants';
 
 export const initialState = {
@@ -38,6 +39,7 @@ export const initialState = {
   exportError: '',
   getDataExportSucceed: false,
   msgErrors: [],
+  updateOrder: false,
 };
 
 export const getErrorMessage = err => {
@@ -60,21 +62,19 @@ const ordertContainerReducer = (state = initialState, action) =>
       case EXPORT_CSV:
         draft.getDataExportSucceed = false;
         draft.exportData = [];
-        draft.exportError = '';
+        draft.msgErrors = [];
         break;
       case EXPORT_CSV_SUCCEED:
         draft.getDataExportSucceed = true;
         draft.exportData = action.order;
-        draft.exportError = '';
         break;
       case PERFORM_EXPORT_CSV:
         draft.exportStatus = true;
-        draft.exportError = '';
         break;
-      case PERFORM_EXPORT_CSV_SCUCCEED:
+      case PERFORM_EXPORT_CSV_SUCCEED:
         draft.exportStatus = false;
         draft.exportData = [];
-        draft.exportError = '';
+        draft.msgErrors = [];
         break;
       case EXPORT_CSV_FAILED:
         draft.getDataExportSucceed = false;
@@ -83,10 +83,12 @@ const ordertContainerReducer = (state = initialState, action) =>
         break;
       case GET_ORDERS:
         draft.tableLoading = true;
+        draft.msgErrors = [];
         break;
       case GET_ORDERS_SUCCEED:
         draft.tableLoading = false;
         draft.syncDataSucceed = false;
+        draft.updateOrder = false;
         draft.listOrders = action.listOrder.orders;
         draft.pages = action.listOrder.pages;
         draft.totalItems = action.listOrder.itemCount;
@@ -110,9 +112,17 @@ const ordertContainerReducer = (state = initialState, action) =>
         break;
       case UPLOAD_CSV:
         draft.loading = true;
+        draft.msgErrors = [];
         break;
       case UPLOAD_CSV_SUCCEED:
         draft.loading = false;
+        draft.updateOrder = true;
+        draft.msgErrors = [];
+        break;
+      case UPLOAD_CSV_FAILED:
+        draft.loading = false;
+        draft.updateOrder = true;
+        draft.msgErrors = getErrorMessage(action.err);
         break;
       case SYCN_DATA_STORE:
         draft.syncStatus = true;
@@ -125,6 +135,9 @@ const ordertContainerReducer = (state = initialState, action) =>
         break;
       case SYCN_DATA_STORE_FAILED:
         draft.syncStatus = false;
+        draft.msgErrors = getErrorMessage(action.err);
+        break;
+      case IMPORT_FILE_EXCEPTION_CANCEL:
         draft.msgErrors = getErrorMessage(action.err);
         break;
       case LOCATION_CHANGE:

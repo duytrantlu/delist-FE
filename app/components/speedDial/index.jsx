@@ -29,7 +29,7 @@ const actions = [
 ];
 
 export default function OpenIconSpeedDial(props) {
-  const { uploadCsv, syncData, syncStatus, exportCsv, exportCsvStatus } = props;
+  const { uploadCsv, syncData, syncStatus, exportCsv, exceptionImportFileCancel } = props;
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [openModal, setOpenModal] = React.useState(false);
@@ -69,7 +69,7 @@ export default function OpenIconSpeedDial(props) {
   }
 
   const handleCloseToExport = () => {
-    const filter=[{ startDate: stateTimeRange[0].startDate.toISOString(), endDate: stateTimeRange[0].endDate.toISOString() }];
+    const filter = [{ startDate: stateTimeRange[0].startDate.toISOString(), endDate: stateTimeRange[0].endDate.toISOString() }];
     exportCsv(filter);
   }
 
@@ -138,7 +138,12 @@ export default function OpenIconSpeedDial(props) {
         setOpenSelectDate={setOpenSelectDate}
         handleCloseToExport={handleCloseToExport}
       />
-      {openModal && <ModalUpload openModal={openModal} handleCloseModal={handleCloseModal} uploadCsv={uploadCsv} />}
+      {openModal && <ModalUpload
+        openModal={openModal}
+        handleCloseModal={handleCloseModal}
+        uploadCsv={uploadCsv}
+        exceptionImportFileCancel={exceptionImportFileCancel}
+      />}
     </>
   );
 }

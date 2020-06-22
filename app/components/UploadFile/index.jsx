@@ -3,7 +3,7 @@ import Papa from 'papaparse';
 import {useDropzone} from 'react-dropzone';
  
 function MyDropzone(props) {
-  const {handleCloseModal, uploadCsv} = props;
+  const {handleCloseModal, uploadCsv, exceptionImportFileCancel} = props;
   const onDrop = useCallback((acceptedFiles) => {
     acceptedFiles.forEach((file) => {
       Papa.parse(file, {
@@ -13,12 +13,11 @@ function MyDropzone(props) {
           return newH.replace(/_$/g, '').toLowerCase().trim();
         },
         complete: function(result){
-          console.log("====result==", result);
           uploadCsv(result.data);
           handleCloseModal(false);
         },
         error: function(err){
-          console.log("==errors==", err);
+          exceptionImportFileCancel(err);
         }
       })
     })

@@ -85,7 +85,17 @@ const makeSelectMsgErrors = () =>
     substate => substate.msgErrors,
   );
 
+const makeSelectUpdateOrderStatus = () =>
+  createSelector(
+    selectOrder,
+    substate => substate.updateOrder,
+  );
 
+const makeSelectExceptionImportFile = () =>
+  createSelector(
+    selectOrder,
+    substate => substate.exceptionImportFile,
+  );
 
 export {
   makeSelectLoading,
@@ -100,5 +110,7 @@ export {
   makeSelectExportCsvStatus,
   makeSelectDataExport,
   makeSelectGetExportDataStatus,
-  makeSelectMsgErrors
+  makeSelectMsgErrors,
+  makeSelectUpdateOrderStatus,
+  makeSelectExceptionImportFile
 };

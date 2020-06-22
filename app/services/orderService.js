@@ -23,4 +23,8 @@ const getDataExport = async opts =>
   }
   );
 
-export { syncData, getOrders, getDataExport };
+const updateOrder = async data => Request.put('/api/orders', { orders: data }, {
+  headers: { 'authorization': `bearer ${Auth.getToken()}` }
+})
+
+export { syncData, getOrders, getDataExport, updateOrder };

@@ -15,8 +15,10 @@ import {
   EXPORT_CSV_SUCCEED,
   EXPORT_CSV_FAILED,
   PERFORM_EXPORT_CSV,
-  PERFORM_EXPORT_CSV_SCUCCEED,
-  PERFORM_EXPORT_CSV_FAILED
+  PERFORM_EXPORT_CSV_SUCCEED,
+  PERFORM_EXPORT_CSV_FAILED,
+  IMPORT_FILE_EXCEPTION,
+  IMPORT_FILE_EXCEPTION_CANCEL
 } from './constants';
 
 export const uploadCsvFileAction = data => ({
@@ -44,7 +46,7 @@ export const performExportCsv = () => ({
 });
 
 export const performExportCsvScucceed = () =>({
-  type: PERFORM_EXPORT_CSV_SCUCCEED
+  type: PERFORM_EXPORT_CSV_SUCCEED
 });
 
 export const performExportCsvFailed = err =>({
@@ -102,4 +104,15 @@ export const getStoreFailed = err => ({
   type: GET_STORE_FAILED,
   err,
 });
+
+export const exceptionImportFile = err => ({
+  type:IMPORT_FILE_EXCEPTION,
+  err
+});
+
+export const exceptionImportFileCancel = err => ({
+  type:IMPORT_FILE_EXCEPTION_CANCEL,
+  err
+})
+
 

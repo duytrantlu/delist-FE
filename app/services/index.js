@@ -12,7 +12,12 @@ import {
 } from './store-services';
 import { getListOrderFromWoo, getCustomerInfo } from './woo';
 
-import { syncData, getOrders, getDataExport } from './orderService';
+import {
+  syncData,
+  getOrders,
+  getDataExport,
+  updateOrder
+} from './orderService';
 
 const servicesExpress = {
   userSevices: {
@@ -35,6 +40,7 @@ const servicesExpress = {
     syncData,
     getOrders,
     getDataExport,
+    updateOrder
   },
 };
 

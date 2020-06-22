@@ -20,7 +20,7 @@ import { addDays, subMonths } from 'date-fns';
 import IconButton from "@material-ui/core/IconButton";
 import { Button } from '@material-ui/core';
 import SearchIcon from "@material-ui/icons/Search";
-import { CSVDownload, CSVLink } from "react-csv";
+import { CSVLink } from "react-csv";
 
 
 
@@ -43,7 +43,8 @@ import {
   makeSelectExportCsvStatus,
   makeSelectDataExport,
   makeSelectGetExportDataStatus,
-  makeSelectMsgErrors
+  makeSelectMsgErrors,
+  makeSelectUpdateOrderStatus
 } from './selectors';
 import {
   uploadCsvFileAction,
@@ -52,7 +53,8 @@ import {
   getStore as getStoreAction,
   exportCsv as exportCsvAction,
   performExportCsv as performExportCsvAction,
-  performExportCsvScucceed as performExportCsvScucceedAction
+  performExportCsvScucceed as performExportCsvScucceedAction,
+  exceptionImportFile
 } from './actions';
 
 import {
@@ -142,7 +144,9 @@ const Order = props => {
     performExportCsvScucceed,
     globalErrorStatus,
     setHidePopup,
-    msgErrors
+    msgErrors,
+    updateOrderStatus,
+    exceptionImportFile
   } = props;
   useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
@@ -162,6 +166,10 @@ const Order = props => {
       key: 'selection'
     }
   ]);
+  const [uploadCsvException, setPploadCsvException] = React.useState({
+    exceptionState: false,
+    errors: []
+  });
   const csvLinkClick = React.useRef();
   useEffect(() => {
     getOrders(1, 10);
@@ -182,13 +190,13 @@ const Order = props => {
   }, [exportCsvStatus]);
 
   useEffect(() => {
-    if (syncDataSucceed) {
+    if (syncDataSucceed || updateOrderStatus) {
       getOrders(1, 10)
     }
     if (getStoreStatus) {
       getStore();
     }
-  }, [syncDataSucceed, getStoreStatus]);
+  }, [syncDataSucceed, getStoreStatus, updateOrderStatus]);
 
   const renderTable = () => {
     return listOrders.map((order, key) => {
@@ -460,6 +468,7 @@ const Order = props => {
                   syncStatus={syncStatus}
                   exportCsv={exportCsv}
                   exportCsvStatus={exportCsvStatus}
+                  exceptionImportFile={exceptionImportFile}
                 />
               </CardFooter>
             </Card>
@@ -493,6 +502,7 @@ const mapStateToProps = createStructuredSelector({
   getDataExportStatus: makeSelectGetExportDataStatus(),
   globalErrorStatus: makeSelectCurrentErrorStatus(),
   msgErrors: makeSelectMsgErrors(),
+  updateOrderStatus: makeSelectUpdateOrderStatus()
 });
 
 export const mapDispatchToProps = dispatch => ({
@@ -504,7 +514,8 @@ export const mapDispatchToProps = dispatch => ({
   exportCsv: filter => dispatch(exportCsvAction(filter)),
   performExportCsv: () => dispatch(performExportCsvAction()),
   performExportCsvScucceed: () => dispatch(performExportCsvScucceedAction()),
-  setHidePopup: () => dispatch(setHidePopupAction())
+  setHidePopup: () => dispatch(setHidePopupAction()),
+  exceptionImportFile: err => dispatch(exceptionImportFile(err))
 });
 
 const withConnect = connect(

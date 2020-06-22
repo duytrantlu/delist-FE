@@ -9,7 +9,8 @@ import {
   SYCN_DATA_STORE,
   GET_ORDERS,
   GET_STORE,
-  EXPORT_CSV
+  EXPORT_CSV,
+  IMPORT_FILE_EXCEPTION
 } from './constants';
 import {
   uploadCsvSucceed,
@@ -33,11 +34,18 @@ export function* handleError(error) {
 
 
 export function* uploadCsvActionHandler(data) {
-  console.log("===data==", data);
-  data.data.forEach(v => {
-    console.log("==v===", v);
-  })
-  yield put(uploadCsvSucceed());
+  try {
+    const response = yield call(service.orderServices.updateOrder, data.data);
+    if (response.status === 200 && response.data.success === true && !response.data.errors.length) {
+      yield put(uploadCsvSucceed());
+    } else {
+      yield put(uploadCsvFailed(new Error(response.data.errors)));
+      yield put(setShowPopup());
+    }
+  } catch (err) {
+    yield put(uploadCsvFailed(err));
+    yield put(setShowPopup());
+  }
 }
 
 export function* getOrderActionHandler(data) {
@@ -168,6 +176,11 @@ function* getStoreActionHandler() {
   }
 }
 
+function* importFileExceptionActionHandler() {
+  yield put(exceptionImportFileCancel(data.err));
+  yield put(setShowPopup());
+}
+
 export function* syncDataStoreHandlerWatcher() {
   yield takeLatest(SYCN_DATA_STORE, syncDataActionHandler);
 }
@@ -188,6 +201,10 @@ export function* exportCsvHandlerWatcher() {
   yield takeLatest(EXPORT_CSV, exportCsvActionHandler);
 }
 
+export function* importFileExceptionHandlerWatcher() {
+  yield takeLatest(IMPORT_FILE_EXCEPTION, importFileExceptionActionHandler);
+}
+
 export default function* watchSaga() {
   yield all([
     fork(uploadCsvHandlerWatcher),
@@ -195,5 +212,6 @@ export default function* watchSaga() {
     fork(getOrderHandlerWatcher),
     fork(getStoreHandlerWatcher),
     fork(exportCsvHandlerWatcher),
+    fork(importFileExceptionHandlerWatcher),
   ]);
 }
