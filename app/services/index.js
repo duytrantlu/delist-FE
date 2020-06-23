@@ -19,6 +19,10 @@ import {
   updateOrder
 } from './orderService';
 
+import {
+  getDashboard
+} from './dashboardService';
+
 const servicesExpress = {
   userSevices: {
     profileUserPassword,
@@ -42,6 +46,9 @@ const servicesExpress = {
     getDataExport,
     updateOrder
   },
+  dashboard: {
+    getDashboard
+  }
 };
 
 export default servicesExpress;

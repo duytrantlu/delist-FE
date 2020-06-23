@@ -65,6 +65,14 @@ import {
   makeSelectCurrentErrorStatus
 } from 'containers/App/selectors';
 
+import {
+  getDashboard as getDashboardAction,
+  setStateTimeRange as setStateTimeRangeAction
+} from 'containers/Dashboard/actions';
+import {
+  makeSelectTimeSearch
+} from 'containers/Dashboard/selectors';
+
 // reactstrap components
 import {
   Card,
@@ -146,7 +154,10 @@ const Order = props => {
     setHidePopup,
     msgErrors,
     updateOrderStatus,
-    exceptionImportFile
+    exceptionImportFile,
+    setStateTimeRangeDashboard,
+    stateTimeRangeDashboard,
+    getDashboard
   } = props;
   useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
@@ -174,6 +185,7 @@ const Order = props => {
   useEffect(() => {
     getOrders(1, 10);
     getStore();
+    getDashboard([{ startDate: stateTimeRangeDashboard[0].startDate.toISOString(), endDate: stateTimeRangeDashboard[0].endDate.toISOString() }]);
   }, []);
 
   useEffect(() => {
@@ -219,7 +231,7 @@ const Order = props => {
           <td>{order.billing.email}</td>
           <td>{order.status}</td>
           <td>
-            {order.currency_symbol + order.total}
+            {order.currency_symbol ? order.currency_symbol : (order.currency === 'USD' ? '$' : '') + order.total}
             <br />
             {order.payment_method_title}
           </td>
@@ -295,7 +307,7 @@ const Order = props => {
     getOrders(1, 10, filter);
   }
   const classes = useStyles();
-  
+
   const optionsStore = dataStores ? dataStores.map(st => {
     return { label: st.name, value: st._id }
   }) : [];
@@ -334,9 +346,10 @@ const Order = props => {
     { label: "Exported date", value: 'date_exported' },
     { label: "Shipped date", value: 'data_shipped' }
   ];
+
   return (
     <>
-      <Header />
+      <Header getDashboard={getDashboard} stateTimeRange={stateTimeRangeDashboard} setStateTimeRange={setStateTimeRangeDashboard} />
       {/* Page content */}
       <Container className="mt--7" fluid>
         {/* Table */}
@@ -480,10 +493,10 @@ const Order = props => {
           className="btn btn-primary"
           target="_blank"
           ref={csvLinkClick}
-          style={{'display':'none'}}
+          style={{ 'display': 'none' }}
         />
       </Container>
-      <Dialog setHidePopup ={setHidePopup} msgErrors={msgErrors} globalErrorStatus={globalErrorStatus}/>
+      <Dialog setHidePopup={setHidePopup} msgErrors={msgErrors} globalErrorStatus={globalErrorStatus} />
     </>
   );
 }
@@ -502,7 +515,8 @@ const mapStateToProps = createStructuredSelector({
   getDataExportStatus: makeSelectGetExportDataStatus(),
   globalErrorStatus: makeSelectCurrentErrorStatus(),
   msgErrors: makeSelectMsgErrors(),
-  updateOrderStatus: makeSelectUpdateOrderStatus()
+  updateOrderStatus: makeSelectUpdateOrderStatus(),
+  stateTimeRangeDashboard: makeSelectTimeSearch(),
 });
 
 export const mapDispatchToProps = dispatch => ({
@@ -515,7 +529,9 @@ export const mapDispatchToProps = dispatch => ({
   performExportCsv: () => dispatch(performExportCsvAction()),
   performExportCsvScucceed: () => dispatch(performExportCsvScucceedAction()),
   setHidePopup: () => dispatch(setHidePopupAction()),
-  exceptionImportFile: err => dispatch(exceptionImportFile(err))
+  exceptionImportFile: err => dispatch(exceptionImportFile(err)),
+  setStateTimeRangeDashboard: time => dispatch(setStateTimeRangeAction(time)),
+  getDashboard: filter => dispatch(getDashboardAction(filter))
 });
 
 const withConnect = connect(

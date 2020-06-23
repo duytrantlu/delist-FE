@@ -11,7 +11,13 @@ const calendarRangePicker = {
   width: '188%',
 }
 
+const calendarDasboardPicker = {
+  paddingTop: '20px',
+  width: '100%',
+}
+
 export {
   modalDateTimePicker,
-  calendarRangePicker
+  calendarRangePicker,
+  calendarDasboardPicker
 }

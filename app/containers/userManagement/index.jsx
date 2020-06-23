@@ -36,6 +36,14 @@ import {
   makeSelectCurrentErrorStatus
 } from 'containers/App/selectors';
 
+import {
+  getDashboard as getDashboardAction,
+  setStateTimeRange as setStateTimeRangeAction
+} from 'containers/Dashboard/actions';
+import {
+  makeSelectTimeSearch
+} from 'containers/Dashboard/selectors';
+
 const key = 'userManagement';
 
 const userManager = props => {
@@ -50,7 +58,10 @@ const userManager = props => {
     editRoleSucceed,
     globalErrorStatus,
     setHidePopup,
-    msgErrors
+    msgErrors,
+    getDashboard,
+    setStateTimeRange,
+    stateTimeRange
   } = props;
   const user = Auth.getUser();
   const columns = React.useMemo(
@@ -71,6 +82,7 @@ const userManager = props => {
 
   useEffect(()=>{
     getData();
+    getDashboard([{ startDate: stateTimeRange[0].startDate.toISOString(), endDate: stateTimeRange[0].endDate.toISOString() }]);
   }, [])
 
   useEffect(() => {
@@ -101,7 +113,7 @@ const userManager = props => {
 
   return (
     <>
-      <Header />
+      <Header getDashboard={getDashboard} stateTimeRange={stateTimeRange} setStateTimeRange={setStateTimeRange} />
       <div>
         <CssBaseline />
         <EnhancedTable
@@ -124,7 +136,8 @@ const mapStateToProps = createStructuredSelector({
   delUserSucceed: makeSelectDelUserSucceed(),
   editRoleSucceed: makeSelectEditUserSucceed(),
   globalErrorStatus: makeSelectCurrentErrorStatus(),
-  msgErrors: makeSelectMsgError()
+  msgErrors: makeSelectMsgError(),
+  stateTimeRange: makeSelectTimeSearch(),
 });
 
 export const mapDispatchToProps = dispatch => ({
@@ -133,7 +146,9 @@ export const mapDispatchToProps = dispatch => ({
   setAddUser: data => dispatch(setDataAddUserAction(data)),
   delUser: data => dispatch(adminDelUserAction(data)),
   editRole: data => dispatch(editRoleUserAction(data)),
-  setHidePopup: () => dispatch(setHidePopupAction())
+  setHidePopup: () => dispatch(setHidePopupAction()),
+  setStateTimeRange: time => dispatch(setStateTimeRangeAction(time)),
+  getDashboard: filter => dispatch(getDashboardAction(filter))
 });
 
 const withConnect = connect(

@@ -36,6 +36,14 @@ import {
   makeSelectCurrentErrorStatus
 } from 'containers/App/selectors';
 
+import {
+  getDashboard as getDashboardAction,
+  setStateTimeRange as setStateTimeRangeAction
+} from 'containers/Dashboard/actions';
+import {
+  makeSelectTimeSearch
+} from 'containers/Dashboard/selectors';
+
 const key = 'storeManager';
 
 const storeManager = props => {
@@ -50,7 +58,10 @@ const storeManager = props => {
     editStoreSucceed,
     globalErrorStatus,
     setHidePopup,
-    msgErrors
+    msgErrors,
+    getDashboard,
+    setStateTimeRange,
+    stateTimeRange
   } = props;
   const columns = React.useMemo(
     () => Column,
@@ -61,6 +72,7 @@ const storeManager = props => {
 
   useEffect(() => {
     getStore();
+    getDashboard([{ startDate: stateTimeRange[0].startDate.toISOString(), endDate: stateTimeRange[0].endDate.toISOString() }]);
   }, []);
 
   useEffect(() => {
@@ -97,7 +109,7 @@ const storeManager = props => {
 
   return (
     <>
-      <Header />
+      <Header getDashboard={getDashboard} stateTimeRange={stateTimeRange} setStateTimeRange={setStateTimeRange} />
       <div>
         <CssBaseline />
         <EnhancedTable
@@ -121,6 +133,7 @@ const mapStateToProps = createStructuredSelector({
   editStoreSucceed: makeSelectEditStoreSucceed(),
   globalErrorStatus: makeSelectCurrentErrorStatus(),
   msgErrors: makeSelectMsgErrors(),
+  stateTimeRange: makeSelectTimeSearch(),
 });
 
 export const mapDispatchToProps = dispatch => ({
@@ -129,7 +142,9 @@ export const mapDispatchToProps = dispatch => ({
   setAddStore: data => dispatch(setAddStoreAction(data)),
   removeStore: data => dispatch(removeStoreAction(data)),
   editStore: data => dispatch(editStoreAction(data)),
-  setHidePopup: () => dispatch(setHidePopupAction())
+  setHidePopup: () => dispatch(setHidePopupAction()),
+  setStateTimeRange: time => dispatch(setStateTimeRangeAction(time)),
+  getDashboard: filter => dispatch(getDashboardAction(filter))
 });
 
 const withConnect = connect(
