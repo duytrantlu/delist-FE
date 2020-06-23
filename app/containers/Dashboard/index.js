@@ -61,7 +61,7 @@ const Index = props => {
         <td>{v.orderStore}</td>
       <td>{v.itemStore}</td>
       <td>${v.orderStore ? (v.netStore/v.orderStore).toFixed(2) : 0}</td>
-      <td>{v.itemStore ? (v.orderStore/v.itemStore).toFixed(2) :0 }</td>
+      <td>{v.orderStore ? (v.itemStore/v.orderStore).toFixed(2) :0 }</td>
       </tr>)
     }
 

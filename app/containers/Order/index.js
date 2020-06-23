@@ -294,7 +294,7 @@ const Order = props => {
         shipped: selectedShipped.value
       },
       {
-        createdAt: `${stateTimeRange[0].startDate.toISOString()}/${stateTimeRange[0].endDate.toISOString()}`
+        date_created: `${stateTimeRange[0].startDate.toISOString()}/${stateTimeRange[0].endDate.toISOString()}`
       },
       {
         email: selectedEmail

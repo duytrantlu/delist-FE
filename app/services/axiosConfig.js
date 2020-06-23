@@ -2,6 +2,6 @@
 
 import axios from 'axios';
 (function() {
-  axios.defaults.baseURL = 'http://18.219.90.217:3001';
+  axios.defaults.baseURL = 'http://api.delistmanagement.com:3001';
 })();
 export default axios;
