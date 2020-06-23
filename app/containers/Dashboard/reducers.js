@@ -9,7 +9,14 @@ import {
 
 export const initialState = {
   msgErrors: [],
-  dashBoardInfo: {},
+  dashBoardInfo: {
+    headerInfo: {
+      netTotal: 0,
+      orderTotal: 0,
+      itemTotal: 0
+    },
+    storeInfo: {}
+  },
   loading: false,
   getDashboardStatus: false,
   stateTimeRange: [

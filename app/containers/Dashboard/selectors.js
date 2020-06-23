@@ -13,6 +13,13 @@ const makeSelectTimeSearch = () =>
     substate => substate.stateTimeRange,
   );
 
+const makeSelectDashboardInfo = () =>
+  createSelector(
+    selectDashboard,
+    substate => substate.dashBoardInfo,
+  );
+
 export {
   makeSelectTimeSearch,
+  makeSelectDashboardInfo
 };

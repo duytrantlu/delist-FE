@@ -70,7 +70,8 @@ import {
   setStateTimeRange as setStateTimeRangeAction
 } from 'containers/Dashboard/actions';
 import {
-  makeSelectTimeSearch
+  makeSelectTimeSearch,
+  makeSelectDashboardInfo
 } from 'containers/Dashboard/selectors';
 
 // reactstrap components
@@ -157,8 +158,10 @@ const Order = props => {
     exceptionImportFile,
     setStateTimeRangeDashboard,
     stateTimeRangeDashboard,
-    getDashboard
+    getDashboard,
+    dashBoardInfo
   } = props;
+  
   useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -177,10 +180,7 @@ const Order = props => {
       key: 'selection'
     }
   ]);
-  const [uploadCsvException, setPploadCsvException] = React.useState({
-    exceptionState: false,
-    errors: []
-  });
+
   const csvLinkClick = React.useRef();
   useEffect(() => {
     getOrders(1, 10);
@@ -203,7 +203,8 @@ const Order = props => {
 
   useEffect(() => {
     if (syncDataSucceed || updateOrderStatus) {
-      getOrders(1, 10)
+      getOrders(1, 10);
+      setCurrentPage(1);
     }
     if (getStoreStatus) {
       getStore();
@@ -231,7 +232,7 @@ const Order = props => {
           <td>{order.billing.email}</td>
           <td>{order.status}</td>
           <td>
-            {order.currency_symbol ? order.currency_symbol : (order.currency === 'USD' ? '$' : '') + order.total}
+            {(order.currency_symbol ? order.currency_symbol : (order.currency === 'USD' ? '$' : '')) + order.total}
             <br />
             {order.payment_method_title}
           </td>
@@ -349,7 +350,7 @@ const Order = props => {
 
   return (
     <>
-      <Header getDashboard={getDashboard} stateTimeRange={stateTimeRangeDashboard} setStateTimeRange={setStateTimeRangeDashboard} />
+      <Header dashBoardInfoHeader={dashBoardInfo.headerInfo} getDashboard={getDashboard} stateTimeRange={stateTimeRangeDashboard} setStateTimeRange={setStateTimeRangeDashboard} />
       {/* Page content */}
       <Container className="mt--7" fluid>
         {/* Table */}
@@ -517,6 +518,7 @@ const mapStateToProps = createStructuredSelector({
   msgErrors: makeSelectMsgErrors(),
   updateOrderStatus: makeSelectUpdateOrderStatus(),
   stateTimeRangeDashboard: makeSelectTimeSearch(),
+  dashBoardInfo: makeSelectDashboardInfo(),
 });
 
 export const mapDispatchToProps = dispatch => ({

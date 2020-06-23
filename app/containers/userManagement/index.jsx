@@ -41,7 +41,8 @@ import {
   setStateTimeRange as setStateTimeRangeAction
 } from 'containers/Dashboard/actions';
 import {
-  makeSelectTimeSearch
+  makeSelectTimeSearch,
+  makeSelectDashboardInfo
 } from 'containers/Dashboard/selectors';
 
 const key = 'userManagement';
@@ -61,7 +62,8 @@ const userManager = props => {
     msgErrors,
     getDashboard,
     setStateTimeRange,
-    stateTimeRange
+    stateTimeRange,
+    dashBoardInfo
   } = props;
   const user = Auth.getUser();
   const columns = React.useMemo(
@@ -113,7 +115,7 @@ const userManager = props => {
 
   return (
     <>
-      <Header getDashboard={getDashboard} stateTimeRange={stateTimeRange} setStateTimeRange={setStateTimeRange} />
+      <Header dashBoardInfoHeader={dashBoardInfo.headerInfo} getDashboard={getDashboard} stateTimeRange={stateTimeRange} setStateTimeRange={setStateTimeRange} />
       <div>
         <CssBaseline />
         <EnhancedTable
@@ -138,6 +140,7 @@ const mapStateToProps = createStructuredSelector({
   globalErrorStatus: makeSelectCurrentErrorStatus(),
   msgErrors: makeSelectMsgError(),
   stateTimeRange: makeSelectTimeSearch(),
+  dashBoardInfo: makeSelectDashboardInfo(),
 });
 
 export const mapDispatchToProps = dispatch => ({

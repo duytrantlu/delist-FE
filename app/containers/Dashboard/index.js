@@ -32,7 +32,8 @@ import {
   setStateTimeRange as setStateTimeRangeAction
 } from './actions';
 import {
-  makeSelectTimeSearch
+  makeSelectTimeSearch,
+  makeSelectDashboardInfo
 } from './selectors';
 
 const key = 'dashboard';
@@ -41,7 +42,8 @@ const Index = props => {
   const {
     getDashboard,
     setStateTimeRange,
-    stateTimeRange
+    stateTimeRange,
+    dashBoardInfo
   } = props;
   useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
@@ -50,9 +52,24 @@ const Index = props => {
     getDashboard(stateTimeRange);
   }, [])
 
+  const renderStores = storeInfo => {
+    const rows = [];
+    for (let [s, v] of Object.entries(storeInfo)) {
+      rows.push(<tr>
+        <th scope="row">{s}</th>
+        <td>${v.netStore.toFixed(2)}</td>
+        <td>{v.orderStore}</td>
+      <td>{v.itemStore}</td>
+      <td>${v.orderStore ? (v.netStore/v.orderStore).toFixed(2) : 0}</td>
+      <td>{v.itemStore ? (v.orderStore/v.itemStore).toFixed(2) :0 }</td>
+      </tr>)
+    }
+
+    return rows;
+  }
   return (
     <>
-      <Header getDashboard={getDashboard} stateTimeRange={stateTimeRange} setStateTimeRange={setStateTimeRange} />
+      <Header dashBoardInfoHeader={dashBoardInfo.headerInfo} getDashboard={getDashboard} stateTimeRange={stateTimeRange} setStateTimeRange={setStateTimeRange} />
       {/* Page content */}
       <Container className="mt--7" fluid>
         <Row className="mt-5">
@@ -77,15 +94,7 @@ const Index = props => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <th scope="row">/argon/</th>
-                    <td>4,569</td>
-                    <td>340</td>
-                    <td>
-                      <i className="fas fa-arrow-up text-success mr-3" />{' '}
-                      46,53%
-                    </td>
-                  </tr>
+                  {renderStores(dashBoardInfo.storeInfo)}
                 </tbody>
               </Table>
             </Card>
@@ -98,6 +107,7 @@ const Index = props => {
 
 const mapStateToProps = createStructuredSelector({
   stateTimeRange: makeSelectTimeSearch(),
+  dashBoardInfo: makeSelectDashboardInfo(),
 });
 
 export const mapDispatchToProps = dispatch => ({
