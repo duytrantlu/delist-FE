@@ -226,8 +226,13 @@ const Order = props => {
   useEffect(() => {
     socket.off('webhookWooCommerceCreateEvent').on('webhookWooCommerceCreateEvent', data => {
       if(data.success){
-        const filter = makeFilter();
-        getOrders(currentPage, 10, filter);
+        const filter = [
+          {
+            date_created: `${stateTimeRange[0].startDate.toISOString()}/${stateTimeRange[0].endDate.toISOString()}`
+          }
+        ];
+        getOrders(1, 10, filter);
+        setCurrentPage(1);
       }
     });
   
