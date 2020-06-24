@@ -161,7 +161,7 @@ const Order = props => {
     getDashboard,
     dashBoardInfo
   } = props;
-  
+  console.log(listOrders);
   useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
   const [currentPage, setCurrentPage] = React.useState(1);

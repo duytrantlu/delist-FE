@@ -19,22 +19,37 @@ const getListOrderFromWoo = async (instanceStore, page = 1, pageSize = 10) => {
   return result;
 };
 
-const getCustomerInfo = async (instanceStore, id, storeName) => {
-  const wooCommerce = instanceStore.map(store => {
-    if (store.name === storeName) {
-      return new WooCommerceRestApi({
-        url: store.baseUrl,
-        consumerKey: store.consumerKey,
-        consumerSecret: store.consumerSecret,
-        version: 'wc/v3',
-      });
-    }
-  });
-  const result = await Promise.all(
-    wooCommerce
-      .filter(woo => woo != undefined)
-      .map(woo => woo.get(`customers/${id}`)),
-  );
-  return result;
+const updateTrackingNumber = async (instanceStore, orders) => {
+  try {
+    const wooCommerce = [];
+    orders.forEach(order => {
+      instanceStore.forEach(s => {
+        if (order.store === s.name) {
+          wooCommerce.push({
+            id: order.orderid,
+            tracking_number: order.tracking_number,
+            api: new WooCommerceRestApi({
+              url: s.baseUrl,
+              consumerKey: s.consumerKey,
+              consumerSecret: s.consumerSecret,
+              version: 'wc/v3',
+            })
+          });
+        }
+      })
+    });
+
+    // const result = await Promise.all(
+    //   wooCommerce
+    //     .map(woo => woo.api.post(`orders/${woo.id}/shipment-trackings/`, { tracking_number: woo.tracking_number })),
+    // );
+    const result = await Promise.all(
+      wooCommerce
+        .map(woo => woo.api.post(`orders/${woo.id}/shipment-trackings`, { tracking_number: woo.tracking_number })),
+    );
+    return result;
+  } catch (err) {
+    console.log("======err===", err);
+  }
 };
-export { getListOrderFromWoo, getCustomerInfo };
+export { getListOrderFromWoo, updateTrackingNumber };

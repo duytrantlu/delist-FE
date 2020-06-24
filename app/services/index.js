@@ -10,7 +10,7 @@ import {
   createStore,
   removeStore,
 } from './store-services';
-import { getListOrderFromWoo, getCustomerInfo } from './woo';
+import { getListOrderFromWoo, updateTrackingNumber } from './woo';
 
 import {
   syncData,
@@ -38,7 +38,7 @@ const servicesExpress = {
   },
   wooServices: {
     getListOrderFromWoo,
-    getCustomerInfo,
+    updateTrackingNumber,
   },
   orderServices: {
     syncData,

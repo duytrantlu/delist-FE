@@ -35,13 +35,16 @@ export function* handleError(error) {
 
 export function* uploadCsvActionHandler(data) {
   try {
-    const response = yield call(service.orderServices.updateOrder, data.data);
-    if (response.status === 200 && response.data.success === true && !response.data.errors.length) {
-      yield put(uploadCsvSucceed());
-    } else {
-      yield put(uploadCsvFailed(new Error(response.data.errors)));
-      yield put(setShowPopup());
-    }
+    const stores = yield call(service.storeServices.getStore);
+    const storeApis = stores.data.docs;
+    const response = yield call(service.wooServices.updateTrackingNumber, storeApis, data.data);
+    console.log(111, response);
+    // if (response.status === 200 && response.data.success === true && !response.data.errors.length) {
+    //   yield put(uploadCsvSucceed());
+    // } else {
+    //   yield put(uploadCsvFailed(new Error(response.data.errors)));
+    //   yield put(setShowPopup());
+    // }
   } catch (err) {
     yield put(uploadCsvFailed(err));
     yield put(setShowPopup());
