@@ -38,18 +38,13 @@ const updateTrackingNumber = async (instanceStore, orders) => {
         }
       })
     });
-
-    // const result = await Promise.all(
-    //   wooCommerce
-    //     .map(woo => woo.api.post(`orders/${woo.id}/shipment-trackings/`, { tracking_number: woo.tracking_number })),
-    // );
     const result = await Promise.all(
       wooCommerce
         .map(woo => woo.api.post(`orders/${woo.id}/shipment-trackings`, { tracking_number: woo.tracking_number })),
     );
     return result;
   } catch (err) {
-    console.log("======err===", err);
+    return err;
   }
 };
 export { getListOrderFromWoo, updateTrackingNumber };

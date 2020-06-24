@@ -121,7 +121,7 @@ const ordertContainerReducer = (state = initialState, action) =>
         break;
       case UPLOAD_CSV_FAILED:
         draft.loading = false;
-        draft.updateOrder = true;
+        draft.updateOrder = false;
         draft.msgErrors = getErrorMessage(action.err);
         break;
       case SYCN_DATA_STORE:

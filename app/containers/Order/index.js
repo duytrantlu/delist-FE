@@ -29,6 +29,8 @@ import DataPicker from 'components/Calendar';
 import saga from './sagas';
 import reducer from './reducers';
 
+import socket from 'utils/sockets';
+
 
 import {
   makeSelectLoading,
@@ -161,7 +163,7 @@ const Order = props => {
     getDashboard,
     dashBoardInfo
   } = props;
-  console.log(listOrders);
+
   useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -220,6 +222,22 @@ const Order = props => {
       getStore();
     }
   }, [syncDataSucceed, getStoreStatus, updateOrderStatus]);
+
+  useEffect(() => {
+    socket.off('webhookWooCommerceCreateEvent').on('webhookWooCommerceCreateEvent', data => {
+      if(data.success){
+        const filter = makeFilter();
+        getOrders(currentPage, 10, filter);
+      }
+    });
+  
+    socket.off('webhookWooCommerceUpdateEvent').on('webhookWooCommerceUpdateEvent', data => {
+      if(data.success){
+        const filter = makeFilter();
+        getOrders(currentPage, 10, filter);
+      }
+    });
+  }, [])
 
   const renderTable = () => {
     return listOrders.map((order, key) => {

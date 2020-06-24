@@ -37,8 +37,17 @@ export function* uploadCsvActionHandler(data) {
   try {
     const stores = yield call(service.storeServices.getStore);
     const storeApis = stores.data.docs;
-    const response = yield call(service.wooServices.updateTrackingNumber, storeApis, data.data);
-    console.log(111, response);
+    if(stores.status !== 200 && !storeApis.length){
+      yield put(uploadCsvFailed(new Error("No store to update tracking number.")));
+      yield put(setShowPopup());
+      return;
+    }
+    const wooRs = yield call(service.wooServices.updateTrackingNumber, storeApis, data.data);
+    if(wooRs instanceof Error){
+      yield put(uploadCsvFailed(new Error("Some order request update failed with status 404")));
+      yield put(setShowPopup());
+    }
+    // const response = yield call(service.orderServices.updateOrder, data.data);
     // if (response.status === 200 && response.data.success === true && !response.data.errors.length) {
     //   yield put(uploadCsvSucceed());
     // } else {
