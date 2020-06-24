@@ -183,7 +183,12 @@ const Order = props => {
 
   const csvLinkClick = React.useRef();
   useEffect(() => {
-    getOrders(1, 10);
+    const filter = [
+      {
+        date_created: `${stateTimeRange[0].startDate.toISOString()}/${stateTimeRange[0].endDate.toISOString()}`
+      }
+    ];
+    getOrders(1, 10, filter);
     getStore();
     getDashboard([{ startDate: stateTimeRangeDashboard[0].startDate.toISOString(), endDate: stateTimeRangeDashboard[0].endDate.toISOString() }]);
   }, []);
@@ -203,7 +208,12 @@ const Order = props => {
 
   useEffect(() => {
     if (syncDataSucceed || updateOrderStatus) {
-      getOrders(1, 10);
+      const filter = [
+        {
+          date_created: `${stateTimeRange[0].startDate.toISOString()}/${stateTimeRange[0].endDate.toISOString()}`
+        }
+      ];
+      getOrders(1, 10, filter);
       setCurrentPage(1);
     }
     if (getStoreStatus) {

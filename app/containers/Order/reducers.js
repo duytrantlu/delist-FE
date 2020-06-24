@@ -141,7 +141,6 @@ const ordertContainerReducer = (state = initialState, action) =>
         draft.msgErrors = getErrorMessage(action.err);
         break;
       case LOCATION_CHANGE:
-        draft.syncStatus = false;
         draft.exportData = [];
         draft.msgErrors = [];
         break;
