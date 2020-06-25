@@ -10,6 +10,7 @@ import { createStructuredSelector } from 'reselect';
 import { InputGroup, InputGroupAddon, InputGroupText, Input } from 'reactstrap';
 import { makeStyles } from '@material-ui/core/styles';
 import Dialog from 'components/Dialog';
+import moment from 'moment';
 
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
@@ -225,7 +226,7 @@ const Order = props => {
 
   useEffect(() => {
     socket.off('webhookWooCommerceCreateEvent').on('webhookWooCommerceCreateEvent', data => {
-      if(data.success){
+      if (data.success) {
         const filter = [
           {
             date_created: `${stateTimeRange[0].startDate.toISOString()}/${stateTimeRange[0].endDate.toISOString()}`
@@ -235,15 +236,22 @@ const Order = props => {
         setCurrentPage(1);
       }
     });
-  
+
     socket.off('webhookWooCommerceUpdateEvent').on('webhookWooCommerceUpdateEvent', data => {
-      if(data.success){
+      if (data.success) {
         const filter = makeFilter();
         getOrders(currentPage, 10, filter);
       }
     });
   }, [])
 
+  const renderTracking = listTracking => {
+    return listTracking.map(t => {
+      return (
+        <div><p>{t.provider} ({t.number})</p> <span>{t.date}</span></div>
+      )
+    })
+  }
   const renderTable = () => {
     return listOrders.map((order, key) => {
       return (
@@ -257,7 +265,7 @@ const Order = props => {
             </a>
             <br />
             <span className="mb-0 text-sm">
-              {order.date_created}
+              {moment(order.date_created).format('MMMM Do YYYY, h:mm:ss a')}
             </span>
           </th>
           <td>{order.billing.first_name + ' ' + order.billing.last_name}</td>
@@ -270,7 +278,7 @@ const Order = props => {
             {order.payment_method_title}
           </td>
           <td>{order.line_items.length} item(s)</td>
-          <td>{order.tracking_number ? order.tracking_number : (<i className="fa fa-minus"></i>)}</td>
+          <td>{order.tracking_number.length ? renderTracking(order.tracking_number) : (<i className="fa fa-minus"></i>)}</td>
         </tr>
       )
     })
