@@ -83,7 +83,7 @@ const ordertContainerReducer = (state = initialState, action) =>
         break;
       case GET_ORDERS:
         draft.tableLoading = true;
-        draft.msgErrors = [];
+        // draft.msgErrors = [];
         break;
       case GET_ORDERS_SUCCEED:
         draft.tableLoading = false;
@@ -92,6 +92,7 @@ const ordertContainerReducer = (state = initialState, action) =>
         draft.listOrders = action.listOrder.orders;
         draft.pages = action.listOrder.pages;
         draft.totalItems = action.listOrder.itemCount;
+        // draft.msgErrors = [];
         break;
       case GET_ORDERS_FAILED:
         draft.tableLoading = false;
@@ -112,12 +113,12 @@ const ordertContainerReducer = (state = initialState, action) =>
         break;
       case UPLOAD_CSV:
         draft.loading = true;
-        draft.msgErrors = [];
+        // draft.msgErrors = [];
         break;
       case UPLOAD_CSV_SUCCEED:
         draft.loading = false;
         draft.updateOrder = true;
-        draft.msgErrors = [];
+        // draft.msgErrors = [];
         break;
       case UPLOAD_CSV_FAILED:
         draft.loading = false;
@@ -126,7 +127,7 @@ const ordertContainerReducer = (state = initialState, action) =>
         break;
       case SYCN_DATA_STORE:
         draft.syncStatus = true;
-        draft.msgErrors = [];
+        // draft.msgErrors = [];
         break;
       case SYCN_DATA_STORE_SUCCEED:
         draft.syncStatus = false;

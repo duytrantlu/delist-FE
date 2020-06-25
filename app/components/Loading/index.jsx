@@ -9,13 +9,16 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: theme.spacing(2),
     },
   },
+  marginAuto: {
+    margin: theme.spacing(2, 'auto')
+  }
 }));
 
 export default function CircularIndeterminate() {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <div className={classes.marginAuto}>
       <CircularProgress />
     </div>
   );

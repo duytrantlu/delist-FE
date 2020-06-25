@@ -130,6 +130,9 @@ const useStyles = makeStyles((theme) => ({
   },
   orderStatusSelect: {
     paddingTop: '25px',
+  },
+  marginAuto: {
+    margin: theme.spacing(10)
   }
 }));
 
@@ -248,7 +251,7 @@ const Order = props => {
   const renderTracking = listTracking => {
     return listTracking.map(t => {
       return (
-        <div><p>{t.provider} ({t.number})</p> <span>{t.date}</span></div>
+        <div><h4 >{t.tracking_provider} ({t.tracking_number})</h4> <span>{t.date_shipped}</span></div>
       )
     })
   }
@@ -488,7 +491,7 @@ const Order = props => {
                   </div>
                 </div>
               </CardHeader>
-              <Table className="align-items-center table-flush" responsive>
+              {loading ? <Loading style={{"margin": "auto"}}/> : <Table className="align-items-center table-flush" responsive>
                 <thead className="thead-light">
                   <tr>
                     <th scope="col"># Order Number</th>
@@ -504,7 +507,7 @@ const Order = props => {
                 <tbody>
                   {renderTable()}
                 </tbody>
-              </Table>
+              </Table>}
               <CardFooter className="py-4">
                 <nav aria-label="...">
                   <TablePagination

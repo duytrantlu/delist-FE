@@ -43,17 +43,19 @@ export function* uploadCsvActionHandler(data) {
       return;
     }
     const wooRs = yield call(service.wooServices.updateTrackingNumber, storeApis, data.data);
-    if(wooRs instanceof Error){
-      yield put(uploadCsvFailed(new Error("Some order request update failed with status 404")));
+    if(wooRs.error.length){
+      yield put(uploadCsvFailed(new Error("Some order update tracking was failed.")));
       yield put(setShowPopup());
     }
-    // const response = yield call(service.orderServices.updateOrder, data.data);
-    // if (response.status === 200 && response.data.success === true && !response.data.errors.length) {
-    //   yield put(uploadCsvSucceed());
-    // } else {
-    //   yield put(uploadCsvFailed(new Error(response.data.errors)));
-    //   yield put(setShowPopup());
-    // }
+
+    const response = yield call(service.orderServices.updateOrder, wooRs.rs);
+
+    if (response.status === 200 && response.data.success === true && !response.data.errors.length) {
+      yield put(uploadCsvSucceed());
+    } else {
+      yield put(uploadCsvFailed(new Error(response.data.errors)));
+      yield put(setShowPopup());
+    }
   } catch (err) {
     yield put(uploadCsvFailed(err));
     yield put(setShowPopup());

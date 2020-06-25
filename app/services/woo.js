@@ -19,7 +19,12 @@ const getListOrderFromWoo = async (instanceStore, page = 1, pageSize = 10) => {
   return result;
 };
 
+
 const updateTrackingNumber = async (instanceStore, orders) => {
+  let result = {
+    error: [],
+    rs: [],
+  };
   try {
     const wooCommerce = [];
     orders.forEach(order => {
@@ -28,6 +33,8 @@ const updateTrackingNumber = async (instanceStore, orders) => {
           wooCommerce.push({
             id: order.orderid,
             tracking_number: order.tracking_number,
+            tracking_provider: order.tracking_provider,
+            orderNumber: order.order_number,
             api: new WooCommerceRestApi({
               url: s.baseUrl,
               consumerKey: s.consumerKey,
@@ -38,13 +45,19 @@ const updateTrackingNumber = async (instanceStore, orders) => {
         }
       })
     });
-    const result = await Promise.all(
-      wooCommerce
-        .map(woo => woo.api.post(`orders/${woo.id}/shipment-trackings`, { tracking_number: woo.tracking_number })),
-    );
-    return result;
+
+    for (let i = 0; i < wooCommerce.length; i++) {
+      try {
+        const wooRs = await wooCommerce[i].api.post(`orders/${wooCommerce[i].id}/shipment-trackings`, { tracking_number: wooCommerce[i].tracking_number, tracking_provider: wooCommerce[i].tracking_provider });
+        result.rs.push({ tracking: wooRs.data, id: wooCommerce[i].id, number: wooCommerce[i].orderNumber })
+      } catch (err1) {
+        result.error.push(err1);
+      }
+    }
   } catch (err) {
-    return err;
+    result.error.push(err);
+  } finally {
+    return result;
   }
 };
 export { getListOrderFromWoo, updateTrackingNumber };
