@@ -82,10 +82,12 @@ const ordertContainerReducer = (state = initialState, action) =>
         draft.msgErrors = getErrorMessage(action.err);
         break;
       case GET_ORDERS:
+        draft.loading = true;
         draft.tableLoading = true;
         // draft.msgErrors = [];
         break;
       case GET_ORDERS_SUCCEED:
+        draft.loading = false;
         draft.tableLoading = false;
         draft.syncDataSucceed = false;
         draft.updateOrder = false;
@@ -95,6 +97,7 @@ const ordertContainerReducer = (state = initialState, action) =>
         // draft.msgErrors = [];
         break;
       case GET_ORDERS_FAILED:
+        draft.loading = false;
         draft.tableLoading = false;
         draft.listOrders = [];
         draft.msgErrors = getErrorMessage(action.err);

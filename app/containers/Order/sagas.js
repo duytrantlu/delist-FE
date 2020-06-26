@@ -42,20 +42,21 @@ export function* uploadCsvActionHandler(data) {
       yield put(setShowPopup());
       return;
     }
-    const wooRs = yield call(service.wooServices.updateTrackingNumber, storeApis, data.data);
-    if(wooRs.error.length){
-      yield put(uploadCsvFailed(new Error("Some order update tracking was failed.")));
-      yield put(setShowPopup());
-    }
+    yield call(service.wooServices.updateTrackingNumber, storeApis, data.data);
+    yield put(uploadCsvSucceed());
+    // if(wooRs.error.length){
+    //   yield put(uploadCsvFailed(new Error("Some order update tracking was failed.")));
+    //   yield put(setShowPopup());
+    // }
 
-    const response = yield call(service.orderServices.updateOrder, wooRs.rs);
+    // const response = yield call(service.orderServices.updateOrder, wooRs.rs);
 
-    if (response.status === 200 && response.data.success === true && !response.data.errors.length) {
-      yield put(uploadCsvSucceed());
-    } else {
-      yield put(uploadCsvFailed(new Error(response.data.errors)));
-      yield put(setShowPopup());
-    }
+    // if (response.status === 200 && response.data.success === true && !response.data.errors.length) {
+    //   yield put(uploadCsvSucceed());
+    // } else {
+    //   yield put(uploadCsvFailed(new Error(response.data.errors)));
+    //   yield put(setShowPopup());
+    // }
   } catch (err) {
     yield put(uploadCsvFailed(err));
     yield put(setShowPopup());
