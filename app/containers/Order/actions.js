@@ -18,7 +18,10 @@ import {
   PERFORM_EXPORT_CSV_SUCCEED,
   PERFORM_EXPORT_CSV_FAILED,
   IMPORT_FILE_EXCEPTION,
-  IMPORT_FILE_EXCEPTION_CANCEL
+  IMPORT_FILE_EXCEPTION_CANCEL,
+  REMOVE_TRACKING,
+  REMOVE_TRACKING_SUCCEED,
+  REMOVE_TRACKING_FAILED
 } from './constants';
 
 export const uploadCsvFileAction = data => ({
@@ -45,11 +48,11 @@ export const performExportCsv = () => ({
   type: PERFORM_EXPORT_CSV
 });
 
-export const performExportCsvScucceed = () =>({
+export const performExportCsvScucceed = () => ({
   type: PERFORM_EXPORT_CSV_SUCCEED
 });
 
-export const performExportCsvFailed = err =>({
+export const performExportCsvFailed = err => ({
   type: PERFORM_EXPORT_CSV_FAILED,
   err
 })
@@ -106,13 +109,28 @@ export const getStoreFailed = err => ({
 });
 
 export const exceptionImportFile = err => ({
-  type:IMPORT_FILE_EXCEPTION,
+  type: IMPORT_FILE_EXCEPTION,
   err
 });
 
 export const exceptionImportFileCancel = err => ({
-  type:IMPORT_FILE_EXCEPTION_CANCEL,
+  type: IMPORT_FILE_EXCEPTION_CANCEL,
   err
-})
+});
+
+export const removeTracking = order => ({
+  type: REMOVE_TRACKING,
+  order
+});
+
+export const removeTrackingSucceed = () => ({
+  type: REMOVE_TRACKING_SUCCEED,
+});
+
+export const removeTrackingFailed = err => ({
+  type: REMOVE_TRACKING_FAILED,
+  err
+});
+
 
 

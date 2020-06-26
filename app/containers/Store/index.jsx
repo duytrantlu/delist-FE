@@ -12,6 +12,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import EnhancedTable from 'components/storeManagement/EnhancedTable';
 import Header from 'components/Headers/Header';
 import Dialog from 'components/Dialog';
+import Loading from 'components/Loading';
 import Column from './makeTable';
 
 import {
@@ -19,7 +20,8 @@ import {
   makeSelectAddStoreSucceed,
   makeSelectRemoveStoreSucceed,
   makeSelectEditStoreSucceed,
-  makeSelectMsgErrors
+  makeSelectMsgErrors,
+  makeSelectLoading
 } from './selectors';
 import {
   getStore as getStoreAction,
@@ -49,6 +51,7 @@ const key = 'storeManager';
 
 const storeManager = props => {
   const {
+    loading,
     dataStore,
     getStore,
     setAddStore,
@@ -107,7 +110,7 @@ const storeManager = props => {
       _id: storeOriginal._id
     }
 
-    editStore({store: {...newStore, [columnId]: value}});
+    editStore({ store: { ...newStore, [columnId]: value } });
   }
 
   return (
@@ -115,16 +118,16 @@ const storeManager = props => {
       <Header dashBoardInfoHeader={dashBoardInfo.headerInfo} getDashboard={getDashboard} stateTimeRange={stateTimeRange} setStateTimeRange={setStateTimeRange} />
       <div>
         <CssBaseline />
-        <EnhancedTable
+        {loading ? <div style={{ "position": "relative", "left": "50%" }}><Loading /></div> : <EnhancedTable
           columns={columns}
           data={dataStore}
           setAddStore={setAddStore}
           removeStore={removeStore}
           updateMyData={updateMyData}
           skipPageReset={skipPageReset}
-        />
+        />}
       </div>
-      <Dialog setHidePopup ={setHidePopup} msgErrors={msgErrors} globalErrorStatus={globalErrorStatus}/>
+      <Dialog setHidePopup={setHidePopup} msgErrors={msgErrors} globalErrorStatus={globalErrorStatus} />
     </>
   )
 }
@@ -138,6 +141,7 @@ const mapStateToProps = createStructuredSelector({
   msgErrors: makeSelectMsgErrors(),
   stateTimeRange: makeSelectTimeSearch(),
   dashBoardInfo: makeSelectDashboardInfo(),
+  loading: makeSelectLoading()
 });
 
 export const mapDispatchToProps = dispatch => ({

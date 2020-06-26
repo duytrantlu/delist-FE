@@ -17,7 +17,9 @@
 
 import { 
   SET_SHOW_POPUP,
-  SET_HIDE_POPUP
+  SET_HIDE_POPUP,
+  SET_SHOW_POPUP_ERROR_UPDATE_TRACKING,
+  SET_HIDE_POPUP_ERROR_UPDATE_TRACKING
  } from './constants';
 
 export const setShowPopup = () => ({ 
@@ -26,4 +28,13 @@ export const setShowPopup = () => ({
 
 export const setHidePopup = () => ({ 
   type: SET_HIDE_POPUP,
+});
+
+export const popupErrorTracking = err => ({ 
+  type: SET_SHOW_POPUP_ERROR_UPDATE_TRACKING,
+  err
+});
+
+export const hidePopupErrorTracking = () => ({ 
+  type: SET_HIDE_POPUP_ERROR_UPDATE_TRACKING,
 });

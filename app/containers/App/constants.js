@@ -11,3 +11,5 @@
 
 export const SET_SHOW_POPUP = 'boilerplate/App/SET_SHOW_POPUP';
 export const SET_HIDE_POPUP = 'boilerplate/App/SET_HIDE_POPUP';
+export const SET_SHOW_POPUP_ERROR_UPDATE_TRACKING = 'boilerplate/App/SET_SHOW_POPUP_ERROR_UPDATE_TRACKING';
+export const SET_HIDE_POPUP_ERROR_UPDATE_TRACKING = 'boilerplate/App/SET_HIDE_POPUP_ERROR_UPDATE_TRACKING';

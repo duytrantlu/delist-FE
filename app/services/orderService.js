@@ -25,6 +25,10 @@ const getDataExport = async opts =>
 
 const updateOrder = async data => Request.put('/api/orders', { orders: data }, {
   headers: { 'authorization': `bearer ${Auth.getToken()}` }
+});
+
+const removeTracking = async data => Request.put('/api/remove/tracking', { order: data }, {
+  headers: { 'authorization': `bearer ${Auth.getToken()}` }
 })
 
-export { syncData, getOrders, getDataExport, updateOrder };
+export { syncData, getOrders, getDataExport, updateOrder, removeTracking };

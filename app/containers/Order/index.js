@@ -10,10 +10,13 @@ import { createStructuredSelector } from 'reselect';
 import { InputGroup, InputGroupAddon, InputGroupText, Input } from 'reactstrap';
 import { makeStyles } from '@material-ui/core/styles';
 import Dialog from 'components/Dialog';
+import DialogTrackingError from 'components/Orders/TrackingDialog';
 import moment from 'moment';
 
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
+import DeleteIcon from '@material-ui/icons/Delete';
+
 
 import Select from 'react-select';
 import { addDays, subMonths } from 'date-fns';
@@ -47,7 +50,8 @@ import {
   makeSelectDataExport,
   makeSelectGetExportDataStatus,
   makeSelectMsgErrors,
-  makeSelectUpdateOrderStatus
+  makeSelectUpdateOrderStatus,
+  makeSelectRemoveTrackingStatus
 } from './selectors';
 import {
   uploadCsvFileAction,
@@ -57,24 +61,28 @@ import {
   exportCsv as exportCsvAction,
   performExportCsv as performExportCsvAction,
   performExportCsvScucceed as performExportCsvScucceedAction,
-  exceptionImportFile
+  exceptionImportFile,
+  removeTracking as removeTrackingAction
 } from './actions';
 
 import {
+  hidePopupErrorTracking as hidePopupErrorTrackingAction,
   setHidePopup as setHidePopupAction
 } from 'containers/App/actions';
 
 import {
-  makeSelectCurrentErrorStatus
+  makeSelectCurrentErrorStatus,
+  makeSelectUpdateTrackingErrorMsg,
+  makeSelectUpdateTrackingErrorStatus
 } from 'containers/App/selectors';
 
 import {
   getDashboard as getDashboardAction,
-  setStateTimeRange as setStateTimeRangeAction
+  setStateTimeRange as setStateTimeRangeAction,
 } from 'containers/Dashboard/actions';
 import {
   makeSelectTimeSearch,
-  makeSelectDashboardInfo
+  makeSelectDashboardInfo,
 } from 'containers/Dashboard/selectors';
 
 // reactstrap components
@@ -92,6 +100,13 @@ import '@trendmicro/react-paginations/dist/react-paginations.css';
 import Header from 'components/Headers/Header';
 import SpeedDial from 'components/speedDial';
 import Loading from 'components/Loading';
+
+import {
+  TrackingDiv,
+  deleteIcons,
+  deleteIconsPosition,
+  HoverDelIcons
+} from './style'
 
 const key = 'order';
 
@@ -165,7 +180,12 @@ const Order = props => {
     setStateTimeRangeDashboard,
     stateTimeRangeDashboard,
     getDashboard,
-    dashBoardInfo
+    dashBoardInfo,
+    trackingMsgErrs,
+    hidePopupErrorTracking,
+    trackingErrorStatus,
+    removeTrackingStatus,
+    removeTracking
   } = props;
 
   useInjectReducer({ key, reducer });
@@ -246,12 +266,29 @@ const Order = props => {
         getOrders(currentPage, 10, filter);
       }
     });
-  }, [])
+  }, []);
 
-  const renderTracking = listTracking => {
+  useEffect(() => {
+    if (removeTrackingStatus) {
+      const filter = makeFilter();
+      getOrders(currentPage, 10, filter);
+    }
+  }, [removeTrackingStatus])
+
+  const removeTrackingHandle = (tracking, idOrder, numberOrder) => {
+    removeTracking({ tracking, id: idOrder, number: numberOrder })
+  }
+
+  const renderTracking = (listTracking, idOrder, numberOrder) => {
     return listTracking.map(t => {
       return (
-        <div><h4 >{t.tracking_provider} ({t.tracking_number})</h4> <span>{t.date_shipped}</span></div>
+        <TrackingDiv>
+          <h4 >{t.tracking_provider} ({t.tracking_number})</h4>
+          <span>{t.date_shipped}</span>
+          <IconButton aria-label="delete" style={deleteIconsPosition} onClick={() => removeTrackingHandle(t, idOrder, numberOrder)}>
+            <HoverDelIcons><DeleteIcon style={deleteIcons}/></HoverDelIcons>
+          </IconButton>
+        </TrackingDiv>
       )
     })
   }
@@ -281,7 +318,7 @@ const Order = props => {
             {order.payment_method_title}
           </td>
           <td>{order.line_items.length} item(s)</td>
-          <td>{order.tracking_number.length ? renderTracking(order.tracking_number) : (<i className="fa fa-minus"></i>)}</td>
+          <td>{order.tracking_number.length ? renderTracking(order.tracking_number, order.id, order.number) : (<i className="fa fa-minus"></i>)}</td>
         </tr>
       )
     })
@@ -491,7 +528,7 @@ const Order = props => {
                   </div>
                 </div>
               </CardHeader>
-              {loading ? <Loading style={{"margin": "auto"}}/> : <Table className="align-items-center table-flush" responsive>
+              {loading ? <Loading /> : <Table className="align-items-center table-flush" responsive>
                 <thead className="thead-light">
                   <tr>
                     <th scope="col"># Order Number</th>
@@ -542,6 +579,7 @@ const Order = props => {
         />
       </Container>
       <Dialog setHidePopup={setHidePopup} msgErrors={msgErrors} globalErrorStatus={globalErrorStatus} />
+      <DialogTrackingError msgErrors={trackingMsgErrs} setHidePopup={hidePopupErrorTracking} trackingErrorStatus={trackingErrorStatus} />
     </>
   );
 }
@@ -563,6 +601,9 @@ const mapStateToProps = createStructuredSelector({
   updateOrderStatus: makeSelectUpdateOrderStatus(),
   stateTimeRangeDashboard: makeSelectTimeSearch(),
   dashBoardInfo: makeSelectDashboardInfo(),
+  trackingMsgErrs: makeSelectUpdateTrackingErrorMsg(),
+  trackingErrorStatus: makeSelectUpdateTrackingErrorStatus(),
+  removeTrackingStatus: makeSelectRemoveTrackingStatus(),
 });
 
 export const mapDispatchToProps = dispatch => ({
@@ -577,7 +618,9 @@ export const mapDispatchToProps = dispatch => ({
   setHidePopup: () => dispatch(setHidePopupAction()),
   exceptionImportFile: err => dispatch(exceptionImportFile(err)),
   setStateTimeRangeDashboard: time => dispatch(setStateTimeRangeAction(time)),
-  getDashboard: filter => dispatch(getDashboardAction(filter))
+  getDashboard: filter => dispatch(getDashboardAction(filter)),
+  hidePopupErrorTracking: () => dispatch(hidePopupErrorTrackingAction()),
+  removeTracking: order => dispatch(removeTrackingAction(order))
 });
 
 const withConnect = connect(

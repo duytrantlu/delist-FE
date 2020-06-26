@@ -16,7 +16,8 @@ import {
   syncData,
   getOrders,
   getDataExport,
-  updateOrder
+  updateOrder,
+  removeTracking
 } from './orderService';
 
 import {
@@ -44,7 +45,8 @@ const servicesExpress = {
     syncData,
     getOrders,
     getDataExport,
-    updateOrder
+    updateOrder,
+    removeTracking
   },
   dashboard: {
     getDashboard

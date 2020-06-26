@@ -36,10 +36,17 @@ const makeSelectMsgErrors = () =>
     selectStore,
     substate => substate.msgErrors,
   );
+
+const makeSelectLoading = () =>
+  createSelector(
+    selectStore,
+    substate => substate.loading,
+  );
 export {
   makeSelectdataStore,
   makeSelectAddStoreSucceed,
   makeSelectRemoveStoreSucceed,
   makeSelectEditStoreSucceed,
-  makeSelectMsgErrors
+  makeSelectMsgErrors,
+  makeSelectLoading
 };

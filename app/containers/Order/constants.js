@@ -19,3 +19,6 @@ export const PERFORM_EXPORT_CSV_SUCCEED = 'containers/Order/PERFORM_EXPORT_CSV_S
 export const PERFORM_EXPORT_CSV_FAILED = 'containers/Order/PERFORM_EXPORT_CSV_FAILED';
 export const IMPORT_FILE_EXCEPTION = 'containers/Order/IMPORT_FILE_EXCEPTION';
 export const IMPORT_FILE_EXCEPTION_CANCEL = 'containers/Order/IMPORT_FILE_EXCEPTION_CANCEL';
+export const REMOVE_TRACKING = 'containers/Order/REMOVE_TRACKING';
+export const REMOVE_TRACKING_SUCCEED = 'containers/Order/REMOVE_TRACKING_SUCCEED';
+export const REMOVE_TRACKING_FAILED = 'containers/Order/REMOVE_TRACKING_FAILED';

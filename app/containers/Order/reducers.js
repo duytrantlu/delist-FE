@@ -21,7 +21,10 @@ import {
   PERFORM_EXPORT_CSV,
   PERFORM_EXPORT_CSV_SUCCEED,
   PERFORM_EXPORT_CSV_FAILED,
-  IMPORT_FILE_EXCEPTION_CANCEL
+  IMPORT_FILE_EXCEPTION_CANCEL,
+  REMOVE_TRACKING,
+  REMOVE_TRACKING_SUCCEED,
+  REMOVE_TRACKING_FAILED
 } from './constants';
 
 export const initialState = {
@@ -40,6 +43,7 @@ export const initialState = {
   getDataExportSucceed: false,
   msgErrors: [],
   updateOrder: false,
+  removeTrackingStatus: false,
 };
 
 export const getErrorMessage = err => {
@@ -91,6 +95,7 @@ const ordertContainerReducer = (state = initialState, action) =>
         draft.tableLoading = false;
         draft.syncDataSucceed = false;
         draft.updateOrder = false;
+        draft.removeTrackingStatus = false;
         draft.listOrders = action.listOrder.orders;
         draft.pages = action.listOrder.pages;
         draft.totalItems = action.listOrder.itemCount;
@@ -142,6 +147,13 @@ const ordertContainerReducer = (state = initialState, action) =>
         draft.msgErrors = getErrorMessage(action.err);
         break;
       case IMPORT_FILE_EXCEPTION_CANCEL:
+        draft.msgErrors = getErrorMessage(action.err);
+        break;
+      case REMOVE_TRACKING_SUCCEED:
+        draft.removeTrackingStatus = true;
+        break;
+      case REMOVE_TRACKING_FAILED:
+        draft.removeTrackingStatus = false;
         draft.msgErrors = getErrorMessage(action.err);
         break;
       case LOCATION_CHANGE:

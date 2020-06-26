@@ -10,7 +10,8 @@ import {
   GET_ORDERS,
   GET_STORE,
   EXPORT_CSV,
-  IMPORT_FILE_EXCEPTION
+  IMPORT_FILE_EXCEPTION,
+  REMOVE_TRACKING
 } from './constants';
 import {
   uploadCsvSucceed,
@@ -22,11 +23,15 @@ import {
   getStoreSucceed,
   getStoreFailed,
   exportCsvSucceed,
-  exportCsvFailed
+  exportCsvFailed,
+  removeTrackingSucceed,
+  removeTrackingFailed
 } from './actions';
 import {
-  setShowPopup
+  setShowPopup,
+  popupErrorTracking
 } from 'containers/App/actions';
+
 
 export function* handleError(error) {
   yield call(handleGenericError, error);
@@ -37,29 +42,22 @@ export function* uploadCsvActionHandler(data) {
   try {
     const stores = yield call(service.storeServices.getStore);
     const storeApis = stores.data.docs;
-    if(stores.status !== 200 && !storeApis.length){
+    if (stores.status !== 200 && !storeApis.length) {
       yield put(uploadCsvFailed(new Error("No store to update tracking number.")));
       yield put(setShowPopup());
       return;
     }
-    yield call(service.wooServices.updateTrackingNumber, storeApis, data.data);
-    yield put(uploadCsvSucceed());
-    // if(wooRs.error.length){
-    //   yield put(uploadCsvFailed(new Error("Some order update tracking was failed.")));
-    //   yield put(setShowPopup());
-    // }
-
-    // const response = yield call(service.orderServices.updateOrder, wooRs.rs);
-
-    // if (response.status === 200 && response.data.success === true && !response.data.errors.length) {
-    //   yield put(uploadCsvSucceed());
-    // } else {
-    //   yield put(uploadCsvFailed(new Error(response.data.errors)));
-    //   yield put(setShowPopup());
-    // }
+    yield all([
+      call(service.wooServices.updateTrackingNumber, storeApis, data.data),
+      put(uploadCsvSucceed())
+    ]);
   } catch (err) {
-    yield put(uploadCsvFailed(err));
-    yield put(setShowPopup());
+    if (Array.isArray(err)) {
+      yield put(popupErrorTracking(err));
+    } else {
+      yield put(uploadCsvFailed(err));
+      yield put(setShowPopup());
+    }
   }
 }
 
@@ -176,7 +174,6 @@ function* exportCsvActionHandler(data) {
 }
 
 function* getStoreActionHandler() {
-
   try {
     const response = yield call(service.storeServices.getStore);
     if (response.status === 200 && response.data.docs) {
@@ -187,6 +184,21 @@ function* getStoreActionHandler() {
     }
   } catch (err) {
     yield put(getStoreFailed(err));
+    yield put(setShowPopup());
+  }
+}
+
+function* removeTrackingHandler(data){
+  try {
+    const response = yield call(service.orderServices.removeTracking, data.order);
+    if (response.status === 200 && response.data.success) {
+      yield put(removeTrackingSucceed());
+    } else {
+      yield put(removeTrackingFailed(new Error("Remove tracking was failed.")));
+      yield put(setShowPopup());
+    }
+  } catch (err) {
+    yield put(removeTrackingFailed(err));
     yield put(setShowPopup());
   }
 }
@@ -220,6 +232,11 @@ export function* importFileExceptionHandlerWatcher() {
   yield takeLatest(IMPORT_FILE_EXCEPTION, importFileExceptionActionHandler);
 }
 
+export function* removeTrackingHandlerWatcher() {
+  yield takeLatest(REMOVE_TRACKING, removeTrackingHandler);
+}
+
+
 export default function* watchSaga() {
   yield all([
     fork(uploadCsvHandlerWatcher),
@@ -228,5 +245,6 @@ export default function* watchSaga() {
     fork(getStoreHandlerWatcher),
     fork(exportCsvHandlerWatcher),
     fork(importFileExceptionHandlerWatcher),
+    fork(removeTrackingHandlerWatcher),
   ]);
 }

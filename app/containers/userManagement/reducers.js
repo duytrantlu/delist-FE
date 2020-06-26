@@ -2,6 +2,7 @@
 
 import produce from 'immer';
 import {
+  GET_USERS,
   GET_USERS_SUCCEED,
   GET_USERS_FAILED,
   ADD_USER_SUCCEED,
@@ -20,6 +21,7 @@ export const initialState = {
   deleteSucceed: false,
   editUserSucceed: false,
   msgErrors: [],
+  loading: false,
 };
 
 export const getErrorMessage = err => {
@@ -39,19 +41,24 @@ export const getErrorMessage = err => {
 const userManagementContainerReducer = (state = initialState, action) =>
   produce(state, draft => {
     switch (action.type) {
+      case GET_USERS:
+        draft.loading = true;
+        break;
       case GET_USERS_SUCCEED:
+        draft.loading = false;
         draft.users = action.data;
         draft.addUserSucceed = false;
         draft.deleteSucceed = false;
         draft.editUserSucceed = false;
         break;
       case GET_USERS_FAILED:
+        draft.loading = false;
         draft.users = [];
         draft.msgErrors = getErrorMessage(action.err);
         break;
       case DEL_USER_SUCCEED:
         draft.deleteSucceed = true;
-        draft.msgErrors = [];
+        // draft.msgErrors = [];
         break;
       case DEL_USER_FAILED:
         draft.deleteSucceed = false;
@@ -59,7 +66,7 @@ const userManagementContainerReducer = (state = initialState, action) =>
         break;
       case ADD_USER_SUCCEED:
         draft.addUserSucceed = true;
-        draft.msgErrors = [];
+        // draft.msgErrors = [];
         break;
       case ADD_USER_FAILED:
         draft.addUserSucceed = false;
@@ -67,11 +74,11 @@ const userManagementContainerReducer = (state = initialState, action) =>
         break;
       case EDIT_USER_ACTION:
         draft.editUserSucceed = true;
-        draft.msgErrors = [];
+        // draft.msgErrors = [];
         break;
         case EDIT_USER_SUCCEED:
         draft.editUserSucceed = false;
-        draft.msgErrors = [];
+        // draft.msgErrors = [];
         break;
       case EDIT_USER_FAILED:
         draft.editUserSucceed = false;

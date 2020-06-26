@@ -14,12 +14,15 @@ import Header from 'components/Headers/Header';
 import Dialog from 'components/Dialog';
 import Auth from 'utils/Auth';
 
+import Loading from 'components/Loading';
+
 import {
   makeSelectUsers,
   makeSelectAddUserSucceed,
   makeSelectDelUserSucceed,
   makeSelectEditUserSucceed,
-  makeSelectMsgError
+  makeSelectMsgError,
+  makeSelectLoading
 } from './selectors';
 import {
   getUsers as getUsersAction,
@@ -49,6 +52,7 @@ const key = 'userManagement';
 
 const userManager = props => {
   const {
+    loading,
     dataUser,
     getData,
     setAddUser,
@@ -82,7 +86,7 @@ const userManager = props => {
   useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
 
-  useEffect(()=>{
+  useEffect(() => {
     getData();
     getDashboard([{ startDate: stateTimeRange[0].startDate.toISOString(), endDate: stateTimeRange[0].endDate.toISOString() }]);
   }, [])
@@ -110,7 +114,7 @@ const userManager = props => {
   const updateMyData = (rowIndex, columnId, value) => {
     // We also turn on the flag to not reset the page
     setSkipPageReset(true)
-    editRole({user:{...dataWithoutMyself[rowIndex], role: value}})
+    editRole({ user: { ...dataWithoutMyself[rowIndex], role: value } })
   }
 
   return (
@@ -118,16 +122,16 @@ const userManager = props => {
       <Header dashBoardInfoHeader={dashBoardInfo.headerInfo} getDashboard={getDashboard} stateTimeRange={stateTimeRange} setStateTimeRange={setStateTimeRange} />
       <div>
         <CssBaseline />
-        <EnhancedTable
+        {loading ? <div style={{ "position": "relative", "left": "50%" }}><Loading /></div> : <EnhancedTable
           columns={columns}
           data={dataWithoutMyself}
           setAddUser={setAddUser}
           delUser={delUser}
           updateMyData={updateMyData}
           skipPageReset={skipPageReset}
-        />
+        />}
       </div>
-      <Dialog setHidePopup ={setHidePopup} msgErrors={msgErrors} globalErrorStatus={globalErrorStatus}/>
+      <Dialog setHidePopup={setHidePopup} msgErrors={msgErrors} globalErrorStatus={globalErrorStatus} />
     </>
   )
 }
@@ -141,6 +145,7 @@ const mapStateToProps = createStructuredSelector({
   msgErrors: makeSelectMsgError(),
   stateTimeRange: makeSelectTimeSearch(),
   dashBoardInfo: makeSelectDashboardInfo(),
+  loading: makeSelectLoading()
 });
 
 export const mapDispatchToProps = dispatch => ({

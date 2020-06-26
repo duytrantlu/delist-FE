@@ -13,6 +13,20 @@ const makeSelectCurrentErrorStatus = () =>
     globalState => globalState.error,
   );
 
+const makeSelectUpdateTrackingErrorStatus = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.errorUpdateTracking,
+  );
+
+const makeSelectUpdateTrackingErrorMsg = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.msgErrors,
+  );
+
 export {
-  makeSelectCurrentErrorStatus
+  makeSelectCurrentErrorStatus,
+  makeSelectUpdateTrackingErrorStatus,
+  makeSelectUpdateTrackingErrorMsg
 };

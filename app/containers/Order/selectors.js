@@ -97,6 +97,12 @@ const makeSelectExceptionImportFile = () =>
     substate => substate.exceptionImportFile,
   );
 
+const makeSelectRemoveTrackingStatus = () =>
+  createSelector(
+    selectOrder,
+    substate => substate.removeTrackingStatus,
+  );
+
 export {
   makeSelectLoading,
   makeSelectSyncStatus,
@@ -112,5 +118,6 @@ export {
   makeSelectGetExportDataStatus,
   makeSelectMsgErrors,
   makeSelectUpdateOrderStatus,
-  makeSelectExceptionImportFile
+  makeSelectExceptionImportFile,
+  makeSelectRemoveTrackingStatus
 };
