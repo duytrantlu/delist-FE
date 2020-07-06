@@ -52,9 +52,10 @@ class Sidebar extends React.Component {
     });
   };
   // creates the links that appear in the left menu / Sidebar
-  createLinks = routes => {
+  createLinks = (routes, role) => {
     return routes.map((prop, key) => {
       if (prop.layout === "/admin") {
+        if (prop.path === '/user-manager' && role === 'User') return null;
         return (
           <NavItem key={key}>
             <NavLink
@@ -95,7 +96,7 @@ class Sidebar extends React.Component {
     });
   };
   render() {
-    const { bgColor, routes, logo, handleCollapse, handleExpand, isOpenColapse } = this.props;
+    const { bgColor, routes, logo, handleCollapse, handleExpand, isOpenColapse, role } = this.props;
     let navbarBrandProps;
     if (logo && logo.innerLink) {
       navbarBrandProps = {
@@ -211,7 +212,7 @@ class Sidebar extends React.Component {
                   </Row>
                 </div>
                 {/* Navigation */}
-                <Nav navbar>{this.createLinks(routes)}</Nav>
+                <Nav navbar>{this.createLinks(routes, role)}</Nav>
               </Collapse>
               <FooterNavbarDiv className="footerNavbarCollapse">
                 <hr />
@@ -226,7 +227,7 @@ class Sidebar extends React.Component {
               className="navbar-vertical fixed-left navbar-light bg-white"
               expand="md"
               id="sidenav-main"
-              style={{'width':'6%'}}
+              style={{ 'width': '6%' }}
             >
               <Container fluid>
                 {/* Toggler */}
@@ -238,15 +239,15 @@ class Sidebar extends React.Component {
                   <span className="navbar-toggler-icon" />
                 </button>
                 {logo ? (
-                <NavbarBrand className="pt-0" {...navbarBrandProps}>
-                  <img
-                    alt={logo.imgAlt}
-                    className="navbar-brand-img"
-                    src={logo.imgSrc}
-                    style={{'width': '50px'}}
-                  />
-                </NavbarBrand>
-              ) : null}
+                  <NavbarBrand className="pt-0" {...navbarBrandProps}>
+                    <img
+                      alt={logo.imgAlt}
+                      className="navbar-brand-img"
+                      src={logo.imgSrc}
+                      style={{ 'width': '50px' }}
+                    />
+                  </NavbarBrand>
+                ) : null}
                 {/* User */}
                 <Nav className="align-items-center d-md-none">
                   <UncontrolledDropdown nav>

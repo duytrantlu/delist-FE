@@ -25,8 +25,7 @@ import IconButton from "@material-ui/core/IconButton";
 import { Button } from '@material-ui/core';
 import SearchIcon from "@material-ui/icons/Search";
 import { CSVLink } from "react-csv";
-
-
+import Auth from 'utils/Auth';
 
 import DataPicker from 'components/Calendar';
 
@@ -285,9 +284,9 @@ const Order = props => {
         <TrackingDiv>
           <h4 >{t.tracking_provider} ({t.tracking_number})</h4>
           <span>{t.date_shipped}</span>
-          <IconButton aria-label="delete" style={deleteIconsPosition} onClick={() => removeTrackingHandle(t, idOrder, numberOrder)}>
-            <HoverDelIcons><DeleteIcon style={deleteIcons}/></HoverDelIcons>
-          </IconButton>
+          {Auth.getRole() !== 'User' ? <IconButton aria-label="delete" style={deleteIconsPosition} onClick={() => removeTrackingHandle(t, idOrder, numberOrder)}>
+            <HoverDelIcons><DeleteIcon style={deleteIcons} /></HoverDelIcons>
+          </IconButton> : null}
         </TrackingDiv>
       )
     })
@@ -564,6 +563,7 @@ const Order = props => {
                   exportCsv={exportCsv}
                   exportCsvStatus={exportCsvStatus}
                   exceptionImportFile={exceptionImportFile}
+                  role={Auth.getRole()}
                 />
               </CardFooter>
             </Card>

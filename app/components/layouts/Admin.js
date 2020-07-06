@@ -19,11 +19,11 @@ class Admin extends React.Component {
   };
 
   handleCollapse = () => {
-    this.setState({isOpenColapse:false});
+    this.setState({ isOpenColapse: false });
   }
 
   handleExpand = () => {
-    this.setState({isOpenColapse:true});
+    this.setState({ isOpenColapse: true });
   }
 
   componentDidUpdate(e) {
@@ -32,9 +32,10 @@ class Admin extends React.Component {
     this.refs.mainContent.scrollTop = 0;
   }
 
-  getRoutes = routes =>
+  getRoutes = (routes, role) =>
     routes.map((prop, key) => {
       if (prop.layout === '/admin') {
+        if (prop.path === '/user-manager' && role === 'User') return null;
         return (
           <Route
             path={prop.layout + prop.path}
@@ -74,8 +75,9 @@ class Admin extends React.Component {
             imgSrc: require('assets/img/brand/argon-react.png'),
             imgAlt: '...',
           }}
+          role={Auth.getRole()}
         />
-        <div className="main-content" style={this.state.isOpenColapse ?{"marginLeft": '250px'} : {"marginLeft": '90px'}} ref="mainContent">
+        <div className="main-content" style={this.state.isOpenColapse ? { "marginLeft": '250px' } : { "marginLeft": '90px' }} ref="mainContent">
           <AdminNavbar
             {...this.props}
             brandText={this.getBrandText(this.props.location.pathname)}
@@ -88,7 +90,7 @@ class Admin extends React.Component {
             role={Auth.getRole()}
           >
             <Switch>
-              {this.getRoutes(routes)}
+              {this.getRoutes(routes, Auth.getRole())}
             </Switch>
           </PrivateRoutes>
 

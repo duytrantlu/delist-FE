@@ -29,7 +29,7 @@ const actions = [
 ];
 
 export default function OpenIconSpeedDial(props) {
-  const { uploadCsv, syncData, syncStatus, exportCsv, exceptionImportFileCancel } = props;
+  const { uploadCsv, syncData, syncStatus, exportCsv, exceptionImportFileCancel, role } = props;
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [openModal, setOpenModal] = React.useState(false);
@@ -110,6 +110,7 @@ export default function OpenIconSpeedDial(props) {
             )
           }
           if (!syncStatus && action.id === 'syncDataAction') {
+            if (role === 'User') return null;
             return (
               <SpeedDialAction
                 key={action.name}
