@@ -161,10 +161,10 @@ export function* syncDataActionHandler() {
 function* exportCsvActionHandler(data) {
   try {
     const response = yield call(service.orderServices.getDataExport, data.options);
-    if (response.status === 200 && response.data) {
+    if (response.status === 200 && Array.isArray(response.data) && response.data.length) {
       yield put(exportCsvSucceed(response.data));
     } else {
-      yield put(exportCsvFailed(new Error("Export csv file failed.")));
+      yield put(exportCsvFailed(new Error("Nothing to exported.")));
       yield put(setShowPopup());
     }
   } catch (err) {
